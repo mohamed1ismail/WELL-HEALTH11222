@@ -239,6 +239,24 @@
       background: linear-gradient(135deg, #388E3C 0%, #4CAF50 50%, #66BB6A 100%)
     }
 
+    .app-store-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1b1c1a;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease
+    }
+
+    .app-store-link:hover {
+      background: #000;
+      transform: translateY(-1px)
+    }
+
     /* Scroll reveal */
     .reveal {
       opacity: 0;
@@ -362,6 +380,35 @@
       <a href="tel:+966549555157" aria-label="اتصل بنا"
         class="w-11 h-11 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-primary hover:text-white transition-all duration-300">
         <span class="material-symbols-outlined text-[20px]">call</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="app-download" class="max-w-[1200px] mx-auto px-4 md:px-6 mt-10" style="display:none;">
+    <div class="app-promo rounded-lg px-5 py-5 md:px-8 md:py-6 text-white flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="text-center md:text-start">
+        <h3 class="font-bold text-xl md:text-2xl">
+          <span class="lang-en">Download WELL HEALTH App</span>
+          <span class="lang-ar">تنزيل تطبيق ويل هيلث</span>
+        </h3>
+        <p class="text-sm opacity-90 mt-1">
+          <span class="lang-en">Order healthy meals faster from your phone.</span>
+          <span class="lang-ar">اطلب وجباتك الصحية أسرع من جوالك.</span>
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3" id="app-download-links">
+        <a id="android-app-link" href="#" target="_blank" class="app-store-link">
+          <span class="material-symbols-outlined text-[20px]">android</span>
+          <span>Android</span>
+        </a>
+        <a id="ios-app-link" href="#" target="_blank" class="app-store-link">
+          <span class="material-symbols-outlined text-[20px]">phone_iphone</span>
+          <span>iOS</span>
+        </a>
+      </div>
+      <a href="#" class="bg-[#1b1c1a] text-white px-6 py-3 rounded-lg text-sm font-bold hover:bg-black transition-colors" style="display:none;">
+        <span class="lang-en">Download App</span>
+        <span class="lang-ar">تنزيل التطبيق</span>
       </a>
     </div>
   </section>
@@ -688,8 +735,8 @@
         </a>
       </div>
       <!-- QR Code -->
-      <div class="flex flex-col items-center gap-2">
-        <img id="public-qr-img" alt="QR Code" class="w-28 h-28 md:w-32 md:h-32 rounded-lg bg-white p-1"
+      <div class="hidden">
+        <img id="public-qr-img" alt="QR Code" class="w-28 h-28 md:w-32 md:h-32 rounded-lg"
           style="display:none;" />
         <span class="text-white/40 text-xs lang-en">Scan to visit our menu</span>
         <span class="text-white/40 text-xs lang-ar">امسح لزيارة القائمة</span>
@@ -890,6 +937,10 @@
           if (settings.captionAr) localStorage.setItem('wh_caption_ar', settings.captionAr);
           if (typeof settings.bannerEnabled === 'boolean') localStorage.setItem('wh_banner_enabled', settings.bannerEnabled ? 'true' : 'false');
           if (settings.bannerText !== undefined) localStorage.setItem('wh_banner_text', settings.bannerText || '');
+          if (settings.menuUrl !== undefined) localStorage.setItem('wh_menu_url', settings.menuUrl || '');
+          if (typeof settings.appDownloadEnabled === 'boolean') localStorage.setItem('wh_app_download_enabled', settings.appDownloadEnabled ? 'true' : 'false');
+          if (settings.androidAppUrl !== undefined) localStorage.setItem('wh_android_app_url', settings.androidAppUrl || '');
+          if (settings.iosAppUrl !== undefined) localStorage.setItem('wh_ios_app_url', settings.iosAppUrl || '');
           if (settings.logo) localStorage.setItem('wh_logo', settings.logo);
           if (settings.coverImage) localStorage.setItem('wh_cover_image', settings.coverImage);
           if (settings.aboutTextEn !== undefined) localStorage.setItem('wh_about_text_en', settings.aboutTextEn || '');
@@ -966,6 +1017,18 @@
       renderMenuItems();
     }
 
+    function getDiscountResult(price, type, value) {
+      const base = parseFloat(price);
+      const discountValue = parseFloat(value);
+      if (!base || base <= 0 || !discountValue || discountValue <= 0 || !type || type === 'none') return null;
+      const percent = type === 'percentage' ? discountValue : (discountValue / base) * 100;
+      const finalPrice = type === 'percentage' ? base * (100 - discountValue) / 100 : base - discountValue;
+      return {
+        percent: Math.max(Math.min(percent, 100), 0),
+        finalPrice: Math.max(finalPrice, 0)
+      };
+    }
+
     // ===== MENU ITEMS LIST =====
     function renderMenuItems() {
       const list = document.getElementById('menu-items-list');
@@ -1016,9 +1079,9 @@
         let finalPrice = item.portions && item.portions.length > 0
           ? item.portions[0].price
           : (item.priceMd || item.price);
-        let displayPrice = finalPrice;
         let originalPrice = finalPrice;
         let discountBadge = '';
+        let discountPercent = '';
 
         if (item.discountType && item.discountType !== 'none' && item.discountValue) {
           const discVal = parseFloat(item.discountValue);
@@ -1032,6 +1095,13 @@
         }
 
         const currency = currentLang === 'ar' ? 'ر.س' : 'SAR';
+        const discountResult = getDiscountResult(originalPrice, item.discountType, item.discountValue);
+        if (discountResult) {
+          finalPrice = discountResult.finalPrice.toFixed(discountResult.finalPrice % 1 ? 2 : 0);
+          discountPercent = discountResult.percent.toFixed(discountResult.percent % 1 ? 1 : 0);
+          discountBadge = `-${discountPercent}%`;
+        }
+
         const imageSize = item.imageSize || 'medium';
         const imageSizeMap = { small: '80px', medium: '120px', large: '160px' };
         const displayImageSize = imageSizeMap[imageSize] || '120px';
@@ -1051,7 +1121,7 @@
           : `<div class="w-full h-full flex items-center justify-center text-2xl bg-surface-container">🍽️</div>`;
 
         const priceDisplay = discountBadge && finalPrice !== originalPrice
-          ? `<div style="display:flex;align-items:center;gap:6px;"><span style="text-decoration:line-through;color:#999;font-size:0.85rem;">${originalPrice} ${currency}</span><span class="text-primary font-bold text-base">${finalPrice} ${currency}</span></div>`
+          ? `<div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;"><span style="font-size:0.75rem;font-weight:800;color:#e53935;">${currentLang === 'ar' ? 'خصم' : 'Discount'} ${discountPercent}%</span><div style="display:flex;align-items:center;gap:6px;"><span style="text-decoration:line-through;color:#999;font-size:0.85rem;">${originalPrice} ${currency}</span><span class="text-primary font-bold text-base">${finalPrice} ${currency}</span></div></div>`
           : `<p class="text-primary font-bold text-base">${currentLang === 'ar' ? `${finalPrice} ${currency}` : `${currency} ${finalPrice}`}</p>`;
 
         return `
@@ -1173,11 +1243,37 @@
       // Load banner
       var bannerEnabled = localStorage.getItem('wh_banner_enabled') === 'true';
       var bannerText = localStorage.getItem('wh_banner_text') || '';
+      var banner = document.getElementById('promo-banner');
+      if (banner) banner.style.display = 'none';
       if (bannerEnabled && bannerText) {
-        var banner = document.getElementById('promo-banner');
         var bannerTextEl = document.getElementById('promo-banner-text');
         bannerTextEl.textContent = bannerText;
         banner.style.display = 'block';
+      }
+
+      var appDownloadEnabled = localStorage.getItem('wh_app_download_enabled') !== 'false';
+      var androidAppUrl = localStorage.getItem('wh_android_app_url') || '';
+      var iosAppUrl = localStorage.getItem('wh_ios_app_url') || '';
+      var hasAppLink = Boolean(androidAppUrl || iosAppUrl);
+      document.querySelectorAll('#app-download, .app-promo').forEach(function (el) {
+        el.style.display = appDownloadEnabled && hasAppLink ? '' : 'none';
+      });
+      var androidLink = document.getElementById('android-app-link');
+      var iosLink = document.getElementById('ios-app-link');
+      if (androidLink) {
+        androidLink.href = androidAppUrl || '#';
+        androidLink.style.display = androidAppUrl ? 'inline-flex' : 'none';
+      }
+      if (iosLink) {
+        iosLink.href = iosAppUrl || '#';
+        iosLink.style.display = iosAppUrl ? 'inline-flex' : 'none';
+      }
+
+      var menuUrl = localStorage.getItem('wh_menu_url') || '';
+      if (menuUrl) {
+        document.querySelectorAll('a[href="index.html"]').forEach(function (link) {
+          link.href = menuUrl;
+        });
       }
 
       // Load logo

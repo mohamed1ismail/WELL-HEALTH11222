@@ -243,17 +243,23 @@
         ].filter(s => s.price && s.price !== '0' && s.price !== '');
       }
 
+      function getDiscountResult(originalPrice) {
+        const base = parseFloat(originalPrice);
+        const discountValue = parseFloat(item.discountValue);
+        if (!base || base <= 0 || !discountValue || discountValue <= 0 || !item.discountType || item.discountType === 'none') return null;
+        const percent = item.discountType === 'percentage' ? discountValue : (discountValue / base) * 100;
+        const finalPrice = item.discountType === 'percentage' ? base * (100 - discountValue) / 100 : base - discountValue;
+        return {
+          percent: Math.max(Math.min(percent, 100), 0),
+          finalPrice: Math.max(finalPrice, 0)
+        };
+      }
+
       // Calculate discount and apply to first price
       function calculateFinalPrice(originalPrice) {
-        let finalPrice = parseFloat(originalPrice);
-        if (item.discountValue && item.discountValue > 0) {
-          if (item.discountType === 'percentage') {
-            finalPrice = (finalPrice * (100 - item.discountValue) / 100).toFixed(2);
-          } else if (item.discountType === 'fixed') {
-            finalPrice = (finalPrice - item.discountValue).toFixed(2);
-          }
-        }
-        return finalPrice;
+        const discountResult = getDiscountResult(originalPrice);
+        if (!discountResult) return parseFloat(originalPrice);
+        return discountResult.finalPrice.toFixed(discountResult.finalPrice % 1 ? 2 : 0);
       }
 
       const priceDisplay = document.getElementById('price-display');
@@ -273,6 +279,13 @@
           discountBadge.textContent = badgeText;
           discountBadge.classList.remove('hidden');
         }
+      }
+
+      const firstDiscountResult = sizeData.length > 0 ? getDiscountResult(sizeData[0].price) : getDiscountResult(item.price);
+      if (firstDiscountResult) {
+        const percent = firstDiscountResult.percent.toFixed(firstDiscountResult.percent % 1 ? 1 : 0);
+        discountBadge.textContent = '-' + percent + '%';
+        discountBadge.classList.remove('hidden');
       }
 
       if (sizeData.length > 0) {
@@ -328,7 +341,6 @@
       btn.style.transform = 'scale(0.95)';
       setTimeout(() => btn.style.transform = 'scale(1)', 100);
     }
-  </script>
   </script>
 </body>
 

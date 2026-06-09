@@ -991,6 +991,29 @@
           </div>
         </div>
 
+        <!-- Public links and app download -->
+        <div style="margin-bottom:12px;padding:12px;background:#f5f5f5;border-radius:8px;">
+          <div class="form-group" style="margin-bottom:12px;">
+            <label data-ar="رابط المنيو" data-en="Menu Link">رابط المنيو</label>
+            <input type="url" id="settings-menu-url" placeholder="https://example.com/menu" dir="ltr" />
+          </div>
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="settings-app-download-enabled" />
+              <div class="toggle-knob"></div>
+            </label>
+            <span data-ar="إظهار تنزيل التطبيق" data-en="Show App Download">إظهار تنزيل التطبيق</span>
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label data-ar="Android App Link" data-en="Android App Link">Android App Link</label>
+            <input type="url" id="settings-android-app-url" placeholder="https://play.google.com/store/apps/details?id=..." dir="ltr" />
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label data-ar="iOS App Link" data-en="iOS App Link">iOS App Link</label>
+            <input type="url" id="settings-ios-app-url" placeholder="https://apps.apple.com/app/..." dir="ltr" />
+          </div>
+        </div>
+
         <button class="btn btn-green" onclick="saveBrandingSettings()">
           <span class="material-symbols-outlined">save</span>
           <span data-ar="حفظ الإعدادات" data-en="Save Settings">حفظ الإعدادات</span>
@@ -1211,7 +1234,7 @@
           </div>
           <div class="form-group">
             <label data-ar="السعر الأساسي (ر.س)" data-en="Base Price (SAR)">السعر الأساسي (ر.س)</label>
-            <input type="number" id="item-price" placeholder="0.00" min="0" step="0.01" />
+            <input type="number" id="item-price" placeholder="0.00" min="0" step="0.01" oninput="updateDiscountPreview()" />
           </div>
         </div>
 
@@ -1222,7 +1245,7 @@
           <div class="form-row">
             <div class="form-group">
               <label data-ar="نوع الخصم" data-en="Discount Type">نوع الخصم</label>
-              <select id="item-discount-type">
+              <select id="item-discount-type" onchange="updateDiscountPreview()">
                 <option value="none">لا يوجد / None</option>
                 <option value="percentage">نسبة مئوية % / Percentage</option>
                 <option value="fixed">مبلغ ثابت / Fixed Amount</option>
@@ -1230,9 +1253,10 @@
             </div>
             <div class="form-group">
               <label data-ar="قيمة الخصم" data-en="Discount Value">قيمة الخصم</label>
-              <input type="number" id="item-discount-value" placeholder="0" min="0" step="0.01" />
+              <input type="number" id="item-discount-value" placeholder="0" min="0" step="0.01" oninput="updateDiscountPreview()" />
             </div>
           </div>
+          <div id="item-discount-preview" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid #e0e0e0;border-radius:8px;font-size:0.85rem;font-weight:800;color:#2e7d32;"></div>
           <div style="font-size:0.8rem;color:#888;margin-top:6px;">
             <span class="lang-ar">مثال: إذا اخترت نسبة مئوية 10% والسعر 100 ر.س، سيظهر السعر النهائي 90 ر.س</span>
             <span class="lang-en" style="display:none;">Example: 10% discount on 100 SAR = 90 SAR final price</span>
@@ -1466,6 +1490,10 @@
       if (settings.captionAr) localStorage.setItem('wh_caption_ar', settings.captionAr);
       if (typeof settings.bannerEnabled === 'boolean') localStorage.setItem('wh_banner_enabled', settings.bannerEnabled ? 'true' : 'false');
       if (settings.bannerText !== undefined) localStorage.setItem('wh_banner_text', settings.bannerText || '');
+      if (settings.menuUrl !== undefined) localStorage.setItem('wh_menu_url', settings.menuUrl || '');
+      if (typeof settings.appDownloadEnabled === 'boolean') localStorage.setItem('wh_app_download_enabled', settings.appDownloadEnabled ? 'true' : 'false');
+      if (settings.androidAppUrl !== undefined) localStorage.setItem('wh_android_app_url', settings.androidAppUrl || '');
+      if (settings.iosAppUrl !== undefined) localStorage.setItem('wh_ios_app_url', settings.iosAppUrl || '');
       if (settings.logo) localStorage.setItem('wh_logo', settings.logo);
       if (settings.coverImage) localStorage.setItem('wh_cover_image', settings.coverImage);
       if (settings.aboutTextEn !== undefined) localStorage.setItem('wh_about_text_en', settings.aboutTextEn || '');
@@ -1480,6 +1508,10 @@
         captionAr: localStorage.getItem('wh_caption_ar') || 'كُل صح. عِش صح.',
         bannerEnabled: localStorage.getItem('wh_banner_enabled') === 'true',
         bannerText: localStorage.getItem('wh_banner_text') || '',
+        menuUrl: localStorage.getItem('wh_menu_url') || '',
+        appDownloadEnabled: localStorage.getItem('wh_app_download_enabled') !== 'false',
+        androidAppUrl: localStorage.getItem('wh_android_app_url') || '',
+        iosAppUrl: localStorage.getItem('wh_ios_app_url') || '',
         logo: localStorage.getItem('wh_logo') || '',
         coverImage: localStorage.getItem('wh_cover_image') || '',
         aboutTextEn: localStorage.getItem('wh_about_text_en') || '',
@@ -1757,6 +1789,43 @@
       document.getElementById('portions-container').innerHTML = '';
     }
 
+    function getDiscountResult(price, type, value) {
+      var base = parseFloat(price);
+      var discountValue = parseFloat(value);
+      if (!base || base <= 0 || !discountValue || discountValue <= 0 || type === 'none') {
+        return null;
+      }
+
+      var percent = type === 'percentage' ? discountValue : (discountValue / base) * 100;
+      var finalPrice = type === 'percentage' ? base * (100 - discountValue) / 100 : base - discountValue;
+      finalPrice = Math.max(finalPrice, 0);
+      percent = Math.max(Math.min(percent, 100), 0);
+      return {
+        percent: percent,
+        finalPrice: finalPrice
+      };
+    }
+
+    function updateDiscountPreview() {
+      var preview = document.getElementById('item-discount-preview');
+      if (!preview) return;
+      var price = document.getElementById('item-price').value;
+      var type = document.getElementById('item-discount-type').value;
+      var value = document.getElementById('item-discount-value').value;
+      var result = getDiscountResult(price, type, value);
+      if (!result) {
+        preview.style.display = 'none';
+        preview.textContent = '';
+        return;
+      }
+      var percent = result.percent.toFixed(result.percent % 1 ? 1 : 0);
+      var finalPrice = result.finalPrice.toFixed(result.finalPrice % 1 ? 2 : 0);
+      preview.style.display = 'block';
+      preview.textContent = isAR()
+        ? 'نسبة الخصم: ' + percent + '% - السعر بعد الخصم: ' + finalPrice + ' ر.س'
+        : 'Discount: ' + percent + '% - Final price: ' + finalPrice + ' SAR';
+    }
+
     // =============================================
     // ITEM MODAL
     // =============================================
@@ -1789,6 +1858,7 @@
       document.getElementById('item-fats').value = '';
       document.getElementById('item-discount-type').value = 'none';
       document.getElementById('item-discount-value').value = '';
+      updateDiscountPreview();
       document.getElementById('item-image-size').value = 'medium';
       document.getElementById('item-visible').checked = true;
       clearPortions();
@@ -1820,6 +1890,7 @@
           document.getElementById('item-fats').value = item.fats || '';
           document.getElementById('item-discount-type').value = item.discountType || 'none';
           document.getElementById('item-discount-value').value = item.discountValue || '';
+          updateDiscountPreview();
           document.getElementById('item-image-size').value = item.imageSize || 'medium';
           document.getElementById('item-visible').checked = item.visible !== false;
           if (item.img) {
@@ -2374,6 +2445,15 @@
       localStorage.setItem('wh_banner_enabled', bannerEnabled ? 'true' : 'false');
       localStorage.setItem('wh_banner_text', bannerText);
 
+      var menuUrlEl = document.getElementById('settings-menu-url');
+      var appDownloadEl = document.getElementById('settings-app-download-enabled');
+      var androidAppUrlEl = document.getElementById('settings-android-app-url');
+      var iosAppUrlEl = document.getElementById('settings-ios-app-url');
+      localStorage.setItem('wh_menu_url', menuUrlEl ? menuUrlEl.value.trim() : '');
+      localStorage.setItem('wh_app_download_enabled', appDownloadEl && appDownloadEl.checked ? 'true' : 'false');
+      localStorage.setItem('wh_android_app_url', androidAppUrlEl ? androidAppUrlEl.value.trim() : '');
+      localStorage.setItem('wh_ios_app_url', iosAppUrlEl ? iosAppUrlEl.value.trim() : '');
+
       // Handle logo upload
       var logoInput = document.getElementById('settings-logo');
       if (logoInput && logoInput.files && logoInput.files[0]) {
@@ -2418,7 +2498,10 @@
     function saveRestaurantInfo() {
       var name = document.getElementById('settings-name').value.trim();
       var email = document.getElementById('settings-email').value.trim();
-      var settings = { name: name, email: email };
+      var settings = {};
+      try { settings = JSON.parse(localStorage.getItem('wh_settings') || '{}'); } catch (e) { settings = {}; }
+      settings.name = name;
+      settings.email = email;
       localStorage.setItem('wh_settings', JSON.stringify(settings));
       syncSettings();
       showToast(isAR() ? 'تم حفظ البيانات ✓' : 'Info saved ✓');
@@ -2443,6 +2526,23 @@
       }
       if (document.getElementById('settings-banner-text')) {
         document.getElementById('settings-banner-text').value = bannerText;
+      }
+
+      var menuUrl = localStorage.getItem('wh_menu_url') || '';
+      var appDownloadEnabled = localStorage.getItem('wh_app_download_enabled') !== 'false';
+      var androidAppUrl = localStorage.getItem('wh_android_app_url') || '';
+      var iosAppUrl = localStorage.getItem('wh_ios_app_url') || '';
+      if (document.getElementById('settings-menu-url')) {
+        document.getElementById('settings-menu-url').value = menuUrl;
+      }
+      if (document.getElementById('settings-app-download-enabled')) {
+        document.getElementById('settings-app-download-enabled').checked = appDownloadEnabled;
+      }
+      if (document.getElementById('settings-android-app-url')) {
+        document.getElementById('settings-android-app-url').value = androidAppUrl;
+      }
+      if (document.getElementById('settings-ios-app-url')) {
+        document.getElementById('settings-ios-app-url').value = iosAppUrl;
       }
 
       // Load logo preview
