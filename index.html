@@ -336,8 +336,8 @@
       <h1 class="text-primary font-bold text-[32px] md:text-[48px] lang-ar"
         style="font-family:'Cairo',sans-serif;font-weight:900">ويل هيلث</h1>
       <p id="brand-caption-en" class="text-on-surface-variant text-base max-w-xl mx-auto lang-en italic"
-        style="font-family:'Playfair Display',serif">Eat Well. Live Well.</p>
-      <p id="brand-caption-ar" class="text-on-surface-variant text-base max-w-xl mx-auto lang-ar">كُل صح. عِش صح.</p>
+        style="font-family:'Playfair Display',serif">HEALTHY CHOICES HAPPY LIVES</p>
+      <p id="brand-caption-ar" class="text-on-surface-variant text-base max-w-xl mx-auto lang-ar">خيارات صحية، حياة سعيدة</p>
     </div>
     <!-- Social Row -->
     <div class="flex justify-center flex-wrap gap-3 mt-6">
@@ -557,19 +557,13 @@
 
     <!-- Description -->
     <div class="bg-[#FAF6EE] rounded-2xl border border-[#E6DFD3] p-6 mb-8 reveal">
-      <p class="text-on-surface-variant leading-relaxed mb-2">
-        <span class="lang-en">WELL HEALTH is a premium healthy dining destination dedicated to crafting nutritious,
-          delicious meals using the freshest local ingredients. We believe great food and great health go hand in hand —
-          every dish on our menu is thoughtfully prepared with balanced macros and wholesome flavors.</span>
-        <span class="lang-ar">ويل هيلث وجهة طعام صحية فاخرة مكرّسة لتقديم وجبات مغذية ولذيذة باستخدام أجود المكونات
-          المحلية الطازجة. نؤمن أن الطعام الشهي والصحة الجيدة يسيران جنباً إلى جنب — كل طبق في قائمتنا مُعدّ بعناية
-          بمكونات متوازنة ونكهات أصيلة.</span>
-      </p>
-      <p class="text-on-surface-variant leading-relaxed">
-        <span class="lang-en">Our mission is simple: help you eat well, live well, and feel your best every single
-          day.</span>
-        <span class="lang-ar">مهمتنا بسيطة: مساعدتك على الأكل الصحي، والعيش الجيد، والشعور بأفضل حال كل يوم.</span>
-      </p>
+      <div id="about-base-text">
+        <p class="text-on-surface-variant leading-relaxed">
+          <span class="lang-en">A Saudi company interested in spreading a healthy diet lifestyle. We were established in 2018 and our first branch was opened in Riyadh, Kingdom of Saudi Arabia. Due to our interest in spreading healthy culture and the demand of a large segment of society and their interest in healthy meals, we were able in a short time to expand and open several branches in the Kingdom of Saudi Arabia, the United Arab Emirates, and the State of Qatar, to meet the growing demand for our high-quality products and healthy food programs with the best nutritional value.</span>
+          <span class="lang-ar">شركة سعودية نهتم بنشر نمط الغذاء الصحي ، تأسسنا في عام 2018 وتم افتتاح اول فرع لنا في مدينة الرياض بالمملكة العربية السعوديه، ونظرا لاهتمامنا بنشر الثقافة الصحية وإقبال شريحة كبيرة من المجتمع واهتمامهم بالوجبات الصحيه تمكنا في وقت قصير من الانتشار و افتتاح عدة افرع لنا في المملكة العربية السعودية ودولة الامارات المتحدة العربية ودولة قطر وذلك لتلبية الطلب المتزايد على منتجاتنا وبرامجنا الغذائية الصحية ذات الجودة العالية والقيمة الغذائية الافضل.</span>
+        </p>
+      </div>
+      <div id="about-additional-text" class="text-on-surface-variant leading-relaxed mt-4 pt-4 border-t border-[#E6DFD3]/40" style="display: none; white-space: pre-line;"></div>
     </div>
 
     <!-- Rate Us Button -->
@@ -1236,8 +1230,8 @@
     // ===== LOAD EDITABLE CONTENT =====
     function loadEditableContent() {
       // Load caption
-      var captionEn = localStorage.getItem('wh_caption_en') || 'Eat Well. Live Well.';
-      var captionAr = localStorage.getItem('wh_caption_ar') || 'كُل صح. عِش صح.';
+      var captionEn = localStorage.getItem('wh_caption_en') || 'HEALTHY CHOICES HAPPY LIVES';
+      var captionAr = localStorage.getItem('wh_caption_ar') || 'خيارات صحية، حياة سعيدة';
       document.getElementById('brand-caption-en').textContent = captionEn;
       document.getElementById('brand-caption-ar').textContent = captionAr;
 
@@ -1330,15 +1324,15 @@
       var textEn = localStorage.getItem('wh_about_text_en') || '';
       var textAr = localStorage.getItem('wh_about_text_ar') || '';
 
-      var aboutSection = document.querySelector('#tab-about .bg-\\[\\#FAF6EE\\]');
-      if (!aboutSection || (!textEn && !textAr)) return;
+      var additionalContainer = document.getElementById('about-additional-text');
+      if (!additionalContainer) return;
 
       var displayText = currentLang === 'ar' ? textAr : textEn;
-      if (displayText) {
-        var pElem = aboutSection.querySelector('p:first-of-type');
-        if (pElem) {
-          pElem.textContent = displayText;
-        }
+      if (displayText && displayText.trim() !== '') {
+        additionalContainer.textContent = displayText;
+        additionalContainer.style.display = 'block';
+      } else {
+        additionalContainer.style.display = 'none';
       }
     }
 

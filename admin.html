@@ -967,11 +967,11 @@
         <!-- Brand Caption -->
         <div class="form-group" style="margin-bottom:12px;">
           <label data-ar="الشعار الفرعي (EN)" data-en="Tagline (EN)">الشعار الفرعي (EN)</label>
-          <input type="text" id="settings-caption-en" placeholder="e.g. Eat Well. Live Well." />
+          <input type="text" id="settings-caption-en" placeholder="e.g. HEALTHY CHOICES HAPPY LIVES" />
         </div>
         <div class="form-group" style="margin-bottom:12px;">
-          <label data-ar="الشعار الفرعي (AR)" data-en="Tagline (AR)">الشعار الفرعي (AR)</label>
-          <input type="text" id="settings-caption-ar" placeholder="مثال: كل صح. عش صح." dir="rtl" />
+          <label data-ar="الشعر الفرعي (AR)" data-en="Tagline (AR)">الشعار الفرعي (AR)</label>
+          <input type="text" id="settings-caption-ar" placeholder="مثال: خيارات صحية، حياة سعيدة" dir="rtl" />
         </div>
 
         <!-- Promotional Banner -->
@@ -1504,8 +1504,8 @@
       var extra = {};
       try { extra = JSON.parse(localStorage.getItem('wh_settings') || '{}'); } catch (e) { }
       return Object.assign({}, extra, {
-        captionEn: localStorage.getItem('wh_caption_en') || 'Eat Well. Live Well.',
-        captionAr: localStorage.getItem('wh_caption_ar') || 'كُل صح. عِش صح.',
+        captionEn: localStorage.getItem('wh_caption_en') || 'HEALTHY CHOICES HAPPY LIVES',
+        captionAr: localStorage.getItem('wh_caption_ar') || 'خيارات صحية، حياة سعيدة',
         bannerEnabled: localStorage.getItem('wh_banner_enabled') === 'true',
         bannerText: localStorage.getItem('wh_banner_text') || '',
         menuUrl: localStorage.getItem('wh_menu_url') || '',
@@ -2435,8 +2435,8 @@
     }
     function saveBrandingSettings() {
       // Save caption
-      var captionEn = document.getElementById('settings-caption-en').value.trim() || 'Eat Well. Live Well.';
-      var captionAr = document.getElementById('settings-caption-ar').value.trim() || 'كُل صح. عِش صح.';
+      var captionEn = document.getElementById('settings-caption-en').value.trim() || 'HEALTHY CHOICES HAPPY LIVES';
+      var captionAr = document.getElementById('settings-caption-ar').value.trim() || 'خيارات صحية، حياة سعيدة';
       localStorage.setItem('wh_caption_en', captionEn);
       localStorage.setItem('wh_caption_ar', captionAr);
 
@@ -2510,8 +2510,8 @@
 
     function loadBrandingSettings() {
       // Load captions
-      var captionEn = localStorage.getItem('wh_caption_en') || 'Eat Well. Live Well.';
-      var captionAr = localStorage.getItem('wh_caption_ar') || 'كُل صح. عِش صح.';
+      var captionEn = localStorage.getItem('wh_caption_en') || 'HEALTHY CHOICES HAPPY LIVES';
+      var captionAr = localStorage.getItem('wh_caption_ar') || 'خيارات صحية، حياة سعيدة';
       if (document.getElementById('settings-caption-en')) {
         document.getElementById('settings-caption-en').value = captionEn;
       }
