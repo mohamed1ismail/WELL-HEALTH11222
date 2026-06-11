@@ -743,7 +743,7 @@
   </script>
 
   <!-- Provide an embedded QR fallback so the panel shows a valid image immediately -->
-  <script>var __EMBEDDED_QR__ = 'assets/sole-arabic-qr-1780876330781.png';</script>
+  <script>var __EMBEDDED_QR__ = 'assets/sole-arabic-qr-1781140516574.png';</script>
 
   <!-- ======== SIDEBAR ======== -->
   <div id="sidebar">
@@ -2203,6 +2203,7 @@
       }
       // 2. Fallback: localStorage (same device only)
       var stored = localStorage.getItem('wh_uploaded_qr');
+      if (stored === 'assets/sole-arabic-qr-1780876330781.png') stored = '';
       if (stored) {
         displayUploadedQR(stored);
         return;

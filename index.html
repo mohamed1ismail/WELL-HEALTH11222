@@ -1227,6 +1227,7 @@
       var img = document.getElementById('public-qr-img');
       if (!img) return;
       var dataUrl = localStorage.getItem('wh_uploaded_qr') || __DEFAULT_QR__;
+      if (dataUrl === 'assets/sole-arabic-qr-1780876330781.png') dataUrl = 'assets/sole-arabic-qr-1781140516574.png';
       img.src = dataUrl;
       img.style.display = 'inline';
     }
