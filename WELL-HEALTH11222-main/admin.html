@@ -1,0 +1,2618 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WELL Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #FAF6EE;
+      color: #222;
+    }
+
+    /* ---- SIDEBAR ---- */
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      background: #1a1a2e;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    html[dir=rtl] #sidebar {
+      left: auto;
+      right: 0;
+    }
+
+    #sidebar-header {
+      padding: 18px 16px;
+      border-bottom: 1px solid #2d2d4e;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #sidebar-header .brand {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #4CAF50;
+      letter-spacing: 1px;
+    }
+
+    #lang-toggle {
+      background: #4CAF50;
+      border: none;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    #sidebar nav {
+      flex: 1;
+      padding: 12px 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      color: #b0b0c8;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: right;
+    }
+
+    html[dir=ltr] .nav-item {
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      background: #2d2d4e;
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: #4CAF50;
+      color: #fff;
+    }
+
+    .nav-item .material-symbols-outlined {
+      font-size: 22px;
+    }
+
+    #sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid #2d2d4e;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #4CAF50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .user-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    #logout-btn {
+      width: 100%;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    #logout-btn:hover {
+      background: #a93226;
+    }
+
+    /* ---- MAIN ---- */
+    #main {
+      margin-left: 240px;
+      min-height: 100vh;
+      padding: 28px;
+    }
+
+    html[dir=rtl] #main {
+      margin-left: 0;
+      margin-right: 240px;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .panel-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #1a1a2e;
+    }
+
+    /* ---- STAT CARDS ---- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: #FDFBF7;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      text-align: center;
+      border: 1px solid #e6dec9;
+    }
+
+    .stat-card .stat-icon {
+      font-size: 2rem;
+      color: #4CAF50;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #1a1a2e;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* ---- BUTTONS ---- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.85;
+    }
+
+    .btn-green {
+      background: #4CAF50;
+      color: #fff;
+    }
+
+    .btn-blue {
+      background: #2196F3;
+      color: #fff;
+    }
+
+    .btn-red {
+      background: #e53935;
+      color: #fff;
+    }
+
+    .btn-gray {
+      background: #9e9e9e;
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #4CAF50;
+      color: #4CAF50;
+    }
+
+    /* ---- TABLE ---- */
+    .table-wrap {
+      background: #FDFBF7;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      overflow: auto;
+      border: 1px solid #e6dec9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: right;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.9rem;
+    }
+
+    html[dir=ltr] th,
+    html[dir=ltr] td {
+      text-align: left;
+    }
+
+    th {
+      background: #f8f5e7;
+      font-weight: 700;
+      color: #555;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #fafffe;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .badge-green {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .badge-red {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    /* ---- MODAL ---- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal-box {
+      background: #FAF6EE;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      border: 1px solid #e6dec9;
+    }
+
+    .modal-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #FAF6EE;
+      z-index: 1;
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #1a1a2e;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #888;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .modal-footer {
+      padding: 14px 22px;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ---- FORM ---- */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 9px 11px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.9rem;
+      transition: border 0.2s;
+      width: 100%;
+      background: #FAF6EE;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      border-radius: 12px;
+      background: #ccc;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle input {
+      display: none;
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle input:checked~.toggle-knob {
+      transform: translateX(20px);
+    }
+
+    .toggle input:checked+.toggle-knob {
+      transform: translateX(20px);
+    }
+
+    label.toggle {
+      display: block;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .checkbox-row input[type=checkbox] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #4CAF50;
+    }
+
+    /* ---- IMG UPLOAD ---- */
+    .img-upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      text-align: center;
+      padding: 20px;
+      cursor: pointer;
+      transition: border 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .img-upload-area:hover {
+      border-color: #4CAF50;
+    }
+
+    .img-upload-area .material-symbols-outlined {
+      font-size: 2.5rem;
+      color: #aaa;
+    }
+
+    .img-upload-area p {
+      color: #aaa;
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    #item-img-preview {
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    /* ---- PORTIONS ---- */
+    #portions-section {
+      margin-top: 16px;
+    }
+
+    #portions-section .portions-header {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .portions-preset-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .portions-preset-btns .btn {
+      font-size: 0.82rem;
+      padding: 6px 12px;
+    }
+
+    .portion-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .portion-row input {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1.5px solid #ddd;
+      border-radius: 7px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.88rem;
+      background: #FAF6EE;
+    }
+
+    .portion-row input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    .portion-del {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #e53935;
+      font-size: 1.2rem;
+      padding: 2px 6px;
+    }
+
+    /* ---- QR ---- */
+    #qr-wrap {
+      background: #FDFBF7;
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 420px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      border: 1px solid #e6dec9;
+    }
+
+    /* ---- QUICK ACTIONS ---- */
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    /* ---- RECENT LIST ---- */
+    .recent-list {
+      background: #FDFBF7;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      border: 1px solid #e6dec9;
+    }
+
+    .recent-list h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .recent-item:last-child {
+      border-bottom: none;
+    }
+
+    .recent-item img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #eee;
+    }
+
+    .recent-item .ri-info {
+      flex: 1;
+    }
+
+    .recent-item .ri-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .recent-item .ri-cat {
+      font-size: 0.78rem;
+      color: #888;
+    }
+
+    /* ---- TOAST ---- */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4CAF50;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    #toast.show {
+      opacity: 1;
+    }
+
+    /* ---- SETTINGS ---- */
+    .settings-card {
+      background: #FDFBF7;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 520px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      border: 1px solid #e6dec9;
+    }
+
+    .settings-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #1a1a2e;
+    }
+
+    /* ---- HIDDEN ---- */
+    .hidden {
+      display: none;
+    }
+
+    /* ---- LANGUAGE VISIBILITY ---- */
+    html[dir=rtl] .lang-en {
+      display: none !important;
+    }
+
+    html[dir=ltr] .lang-ar {
+      display: none !important;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media(max-width:700px) {
+      #sidebar {
+        width: 200px;
+      }
+
+      #main {
+        margin-left: 200px;
+      }
+
+      html[dir=rtl] #main {
+        margin-left: 0;
+        margin-right: 200px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    // AUTH GUARD
+    if (sessionStorage.getItem('wh_auth') !== 'true' && localStorage.getItem('wh_auth') !== 'true') {
+      window.location.replace('login.html');
+    }
+  </script>
+
+  <!-- Provide an embedded QR fallback so the panel shows a valid image immediately -->
+  <script>var __EMBEDDED_QR__ = 'assets/sole-arabic-qr-1781140516574.png';</script>
+
+  <!-- ======== SIDEBAR ======== -->
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <span class="brand" data-ar="ويل هيلث - الإدارة" data-en="WELL Admin">WELL Admin</span>
+      <button id="lang-toggle" onclick="toggleLang()">EN</button>
+    </div>
+    <nav id="sidebar-nav">
+      <button class="nav-item active" onclick="showSection('dashboard')">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</span>
+      </button>
+      <button class="nav-item" onclick="showSection('categories')">
+        <span class="material-symbols-outlined">category</span>
+        <span data-ar="الفئات" data-en="Categories">الفئات</span>
+      </button>
+      <button class="nav-item" onclick="showSection('items')">
+        <span class="material-symbols-outlined">restaurant_menu</span>
+        <span data-ar="عناصر القائمة" data-en="Menu Items">عناصر القائمة</span>
+      </button>
+      <button class="nav-item" onclick="showSection('qrcode')">
+        <span class="material-symbols-outlined">qr_code_2</span>
+        <span data-ar="رمز QR" data-en="QR Code">رمز QR</span>
+      </button>
+      <button class="nav-item" onclick="showSection('settings')">
+        <span class="material-symbols-outlined">settings</span>
+        <span data-ar="الإعدادات" data-en="Settings">الإعدادات</span>
+      </button>
+      <button class="nav-item" onclick="showSection('guidelines')">
+        <span class="material-symbols-outlined">lightbulb</span>
+        <span data-ar="الإرشادات الصحية" data-en="Health Guidelines">الإرشادات الصحية</span>
+      </button>
+      <button class="nav-item" onclick="showSection('about')">
+        <span class="material-symbols-outlined">info</span>
+        <span data-ar="من نحن" data-en="About Us">من نحن</span>
+      </button>
+      <button class="nav-item" onclick="showSection('social')">
+        <span class="material-symbols-outlined">share</span>
+        <span data-ar="الروابط الاجتماعية" data-en="Social Links">الروابط الاجتماعية</span>
+      </button>
+      <button class="nav-item" onclick="showSection('reviews')">
+        <span class="material-symbols-outlined">star</span>
+        <span data-ar="التقييمات" data-en="Reviews">التقييمات</span>
+      </button>
+    </nav>
+    <div id="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar">A</div>
+        <div class="user-name" data-ar="المدير" data-en="Admin">Admin</div>
+      </div>
+      <button id="logout-btn" onclick="doLogout()">
+        <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+        <span data-ar="تسجيل الخروج" data-en="Logout">تسجيل الخروج</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======== MAIN CONTENT ======== -->
+  <div id="main">
+
+    <!-- DASHBOARD PANEL -->
+    <div id="panel-dashboard" class="panel active">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><span class="material-symbols-outlined">restaurant_menu</span></div>
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label" data-ar="إجمالي الأصناف" data-en="Total Items">إجمالي الأصناف</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><span class="material-symbols-outlined">category</span></div>
+          <div class="stat-num" id="stat-cats">5</div>
+          <div class="stat-label" data-ar="الفئات" data-en="Categories">الفئات</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><span class="material-symbols-outlined">visibility</span></div>
+          <div class="stat-num" id="stat-visible">0</div>
+          <div class="stat-label" data-ar="ظاهر" data-en="Visible">ظاهر</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><span class="material-symbols-outlined">visibility_off</span></div>
+          <div class="stat-num" id="stat-hidden">0</div>
+          <div class="stat-label" data-ar="مخفي" data-en="Hidden">مخفي</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><span class="material-symbols-outlined">star</span></div>
+          <div class="stat-num" id="stat-reviews">0</div>
+          <div class="stat-label" data-ar="التقييمات" data-en="Reviews">التقييمات</div>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="btn btn-green" onclick="openItemModal(null)">
+          <span class="material-symbols-outlined">add</span>
+          <span data-ar="إضافة صنف" data-en="New Item">إضافة صنف</span>
+        </button>
+        <button class="btn btn-blue" onclick="showSection('categories')">
+          <span class="material-symbols-outlined">category</span>
+          <span data-ar="الفئات" data-en="Categories">الفئات</span>
+        </button>
+        <button class="btn btn-gray" onclick="showSection('qrcode')">
+          <span class="material-symbols-outlined">qr_code_2</span>
+          <span data-ar="رمز QR" data-en="QR Code">رمز QR</span>
+        </button>
+        <button class="btn btn-blue" onclick="openGuideModal()" style="background:#f39c12; color:#fff;">
+          <span class="material-symbols-outlined">lightbulb</span>
+          <span data-ar="دليل العروض والبكجات" data-en="Offers & Packages Guide">دليل العروض والبكجات</span>
+        </button>
+      </div>
+      <div class="recent-list">
+        <h4 data-ar="آخر الأصناف المضافة" data-en="Recent Items">آخر الأصناف المضافة</h4>
+        <div id="recent-items-list"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES PANEL -->
+    <div id="panel-categories" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="الفئات" data-en="Categories">الفئات</h2>
+        <button class="btn btn-green" onclick="openCatModal()">
+          <span class="material-symbols-outlined">add</span>
+          <span data-ar="إضافة فئة" data-en="Add Category">إضافة فئة</span>
+        </button>
+      </div>
+      <div class="table-wrap">
+        <table id="cats-table">
+          <thead>
+            <tr>
+              <th data-ar="الاسم عربي" data-en="Name AR">الاسم عربي</th>
+              <th data-ar="الاسم إنجليزي" data-en="Name EN">الاسم إنجليزي</th>
+              <th data-ar="المعرف" data-en="ID">المعرف</th>
+              <th data-ar="الإجراءات" data-en="Actions">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="cats-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MENU ITEMS PANEL -->
+    <div id="panel-items" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="عناصر القائمة" data-en="Menu Items">عناصر القائمة</h2>
+        <button class="btn btn-green" onclick="openItemModal(null)">
+          <span class="material-symbols-outlined">add</span>
+          <span data-ar="صنف جديد" data-en="New Item">صنف جديد</span>
+        </button>
+      </div>
+      <div class="search-wrap" style="margin-bottom: 16px;">
+        <input type="text" id="items-search" placeholder="بحث عن صنف..." data-placeholder-ar="بحث عن صنف..."
+          data-placeholder-en="Search item..." oninput="renderItemsTable()"
+          style="padding:9px 11px; border:1.5px solid #ddd; border-radius:8px; font-family:'Cairo',sans-serif; font-size:0.9rem; width:100%; box-sizing:border-box; background:#FAF6EE;" />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-ar="الصورة" data-en="Image">الصورة</th>
+              <th data-ar="الاسم EN" data-en="Name EN">الاسم EN</th>
+              <th data-ar="الاسم AR" data-en="Name AR">الاسم AR</th>
+              <th data-ar="الفئة" data-en="Category">الفئة</th>
+              <th data-ar="السعر" data-en="Price">السعر</th>
+              <th data-ar="الظهور" data-en="Visible">الظهور</th>
+              <th data-ar="الإجراءات" data-en="Actions">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="items-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- QR CODE PANEL -->
+    <div id="panel-qrcode" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="رمز QR" data-en="QR Code">رمز QR</h2>
+      </div>
+      <div id="qr-wrap">
+        <!-- QR Image Display -->
+        <div id="qr-uploaded-preview-wrap" style="text-align:center; margin:16px auto;">
+          <img id="qr-uploaded-preview" alt="QR Code" src=""
+            style="max-width:220px; max-height:220px; border-radius:8px; margin:0 auto;" />
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+          <button class="btn btn-green" onclick="downloadQR()">
+            <span class="material-symbols-outlined">download</span>
+            <span data-ar="تحميل" data-en="Download">تحميل</span>
+          </button>
+          <button class="btn btn-blue" onclick="printQR()">
+            <span class="material-symbols-outlined">print</span>
+            <span data-ar="طباعة" data-en="Print">طباعة</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div id="panel-settings" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="الإعدادات" data-en="Settings">الإعدادات</h2>
+      </div>
+
+      <!-- Branding Settings -->
+      <div class="settings-card">
+        <h4 data-ar="الهوية البصرية" data-en="Branding">الهوية البصرية</h4>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="شعار المطعم" data-en="Restaurant Logo">شعار المطعم</label>
+          <input type="file" id="settings-logo" accept="image/jpeg,image/png,image/webp" />
+          <img id="logo-preview"
+            style="max-width:150px;max-height:150px;border-radius:8px;margin-top:8px;display:none;" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="صورة الغلاف" data-en="Cover Image">صورة الغلاف</label>
+          <input type="file" id="settings-cover" accept="image/jpeg,image/png,image/webp" />
+          <img id="cover-preview"
+            style="max-width:150px;max-height:100px;border-radius:8px;margin-top:8px;display:none;" />
+        </div>
+
+        <!-- Brand Caption -->
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الشعار الفرعي (EN)" data-en="Tagline (EN)">الشعار الفرعي (EN)</label>
+          <input type="text" id="settings-caption-en" placeholder="e.g. HEALTHY CHOICES HAPPY LIVES" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الشعر الفرعي (AR)" data-en="Tagline (AR)">الشعار الفرعي (AR)</label>
+          <input type="text" id="settings-caption-ar" placeholder="مثال: خيارات صحية، حياة سعيدة" dir="rtl" />
+        </div>
+
+        <!-- Promotional Banner -->
+        <div style="margin-bottom:12px;padding:12px;background:#f5f5f5;border-radius:8px;">
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="settings-banner-enabled" />
+              <div class="toggle-knob"></div>
+            </label>
+            <span data-ar="تفعيل البانر الترويجي" data-en="Enable Promotional Banner">تفعيل البانر الترويجي</span>
+          </div>
+          <div class="form-group" style="margin-top:10px;">
+            <label data-ar="نص البانر الترويجي" data-en="Banner Text">نص البانر الترويجي</label>
+            <textarea id="settings-banner-text" placeholder="مثال: عرض خاص - خصم 20% على كل الطلبات"
+              data-placeholder-ar="مثال: عرض خاص - خصم 20%"
+              data-placeholder-en="e.g. Special Offer - 20% off"></textarea>
+          </div>
+        </div>
+
+        <!-- Public links and app download -->
+        <div style="margin-bottom:12px;padding:12px;background:#f5f5f5;border-radius:8px;">
+          <div class="form-group" style="margin-bottom:12px;">
+            <label data-ar="رابط المنيو" data-en="Menu Link">رابط المنيو</label>
+            <input type="url" id="settings-menu-url" placeholder="https://example.com/menu" dir="ltr" />
+          </div>
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="settings-app-download-enabled" />
+              <div class="toggle-knob"></div>
+            </label>
+            <span data-ar="إظهار تنزيل التطبيق" data-en="Show App Download">إظهار تنزيل التطبيق</span>
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label data-ar="Android App Link" data-en="Android App Link">Android App Link</label>
+            <input type="url" id="settings-android-app-url" placeholder="https://play.google.com/store/apps/details?id=..." dir="ltr" />
+          </div>
+          <div class="form-group" style="margin-top:12px;">
+            <label data-ar="iOS App Link" data-en="iOS App Link">iOS App Link</label>
+            <input type="url" id="settings-ios-app-url" placeholder="https://apps.apple.com/app/..." dir="ltr" />
+          </div>
+        </div>
+
+        <button class="btn btn-green" onclick="saveBrandingSettings()">
+          <span class="material-symbols-outlined">save</span>
+          <span data-ar="حفظ الإعدادات" data-en="Save Settings">حفظ الإعدادات</span>
+        </button>
+      </div>
+
+      <!-- Restaurant Info (original) -->
+      <div class="settings-card" style="margin-top:16px;">
+        <h4 data-ar="معلومات المطعم" data-en="Restaurant Info">معلومات المطعم</h4>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="اسم المطعم" data-en="Restaurant Name">اسم المطعم</label>
+          <input type="text" id="settings-name" placeholder="Well Health" />
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+          <input type="email" id="settings-email" placeholder="admin@wellhealth.com" />
+        </div>
+        <button class="btn btn-green" onclick="saveRestaurantInfo()">
+          <span class="material-symbols-outlined">save</span>
+          <span data-ar="حفظ" data-en="Save">حفظ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- REVIEWS PANEL -->
+    <div id="panel-reviews" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="التقييمات" data-en="Reviews">التقييمات</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-ar="الصنف" data-en="Item">الصنف</th>
+              <th data-ar="النجوم" data-en="Stars">النجوم</th>
+              <th data-ar="التاريخ" data-en="Date">التاريخ</th>
+            </tr>
+          </thead>
+          <tbody id="reviews-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- HEALTH GUIDELINES PANEL -->
+    <div id="panel-guidelines" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="الإرشادات الصحية" data-en="Health Guidelines">الإرشادات الصحية</h2>
+        <button class="btn btn-green" onclick="openGuidelineModal()">
+          <span class="material-symbols-outlined">add</span>
+          <span data-ar="إضافة إرشادة" data-en="Add Guideline">إضافة إرشادة</span>
+        </button>
+      </div>
+      <div id="guidelines-list" class="table-wrap">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- ABOUT US PANEL -->
+    <div id="panel-about" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="من نحن" data-en="About Us">من نحن</h2>
+      </div>
+      <div class="settings-card">
+        <h4 data-ar="نص من نحن (EN)" data-en="About Us Text (EN)">نص من نحن (EN)</h4>
+        <textarea id="about-text-en" placeholder="Write your About Us text in English..."
+          style="width:100%;padding:10px;border:1.5px solid #ddd;border-radius:8px;font-family:'Cairo',sans-serif;min-height:150px;margin-bottom:12px;"></textarea>
+
+        <h4 data-ar="نص من نحن (AR)" data-en="About Us Text (AR)" style="margin-top:12px;">نص من نحن (AR)</h4>
+        <textarea id="about-text-ar" placeholder="اكتب نص من نحن بالعربية..." dir="rtl"
+          style="width:100%;padding:10px;border:1.5px solid #ddd;border-radius:8px;font-family:'Cairo',sans-serif;min-height:150px;margin-bottom:12px;"></textarea>
+
+        <button class="btn btn-green" onclick="saveAboutUs()">
+          <span class="material-symbols-outlined">save</span>
+          <span data-ar="حفظ" data-en="Save">حفظ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SOCIAL LINKS PANEL -->
+    <div id="panel-social" class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title" data-ar="الروابط الاجتماعية" data-en="Social Media Links">الروابط الاجتماعية</h2>
+        <button class="btn btn-green" onclick="openSocialLinkModal()">
+          <span class="material-symbols-outlined">add</span>
+          <span data-ar="إضافة رابط" data-en="Add Link">إضافة رابط</span>
+        </button>
+      </div>
+      <div id="social-links-list" class="table-wrap">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- ======== GUIDE MODAL ======== -->
+  <div id="guide-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:550px;">
+      <div class="modal-header">
+        <h3 data-ar="💡 دليل إضافة العروض والبكجات" data-en="💡 Offers & Packages Guide">💡 دليل إضافة العروض والبكجات
+        </h3>
+        <button class="modal-close" onclick="closeGuideModal()">✕</button>
+      </div>
+      <div class="modal-body" style="line-height:1.6; font-size:0.95rem;">
+        <div class="lang-ar">
+          <h4 style="font-weight:900; color:#4CAF50; margin-bottom:8px;">كيفية إضافة العروض والبكجات</h4>
+          <ol style="margin-right:20px; margin-bottom:16px; list-style-type:decimal;">
+            <li style="margin-bottom:8px;"><strong>إنشاء الفئة:</strong> تأكد من وجود فئة "الخصومات والعروض" (أو يمكنك
+              إضافة فئة جديدة باسم <code>discount</code> من قسم الفئات).</li>
+            <li style="margin-bottom:8px;"><strong>إضافة عرض (Offer):</strong>
+              <ul style="margin-right:20px; list-style-type:disc;">
+                <li>انتقل إلى "عناصر القائمة" واضغط على "صنف جديد".</li>
+                <li>اكتب اسم العرض (مثال: "عرض وجبة الغداء").</li>
+                <li>اختر فئة "الخصومات والعروض".</li>
+                <li>ضع السعر المخفض في "السعر الأساسي".</li>
+                <li>اكتب تفاصيل العرض والخصم في حقل الوصف.</li>
+              </ul>
+            </li>
+            <li style="margin-bottom:8px;"><strong>إضافة بكج (Package):</strong>
+              <ul style="margin-right:20px; list-style-type:disc;">
+                <li>اضغط على "صنف جديد" واكتب اسم البكج (مثال: "بكج العائلة الصحي").</li>
+                <li>في حقل الوصف، اكتب محتويات البكج (مثال: 3 وجبات رئيسية + 3 مشروبات).</li>
+                <li>لتحديد خيارات/أحجام مختلفة للبكج، استخدم قسم <strong>الكميات والأحجام (Portions)</strong> بالأسفل
+                  (مثال: إضافة حجم "بكج لشخصين" بسعر 80 ر.س، وحجم "بكج لـ 4 أشخاص" بسعر 150 ر.س).</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+        <div class="lang-en">
+          <h4 style="font-weight:900; color:#4CAF50; margin-bottom:8px;">How to Add Offers & Packages</h4>
+          <ol style="margin-left:20px; margin-bottom:16px; list-style-type:decimal;">
+            <li style="margin-bottom:8px;"><strong>Create the Category:</strong> Ensure the "Discounts & Offers"
+              category is active (or add a new one with ID <code>discount</code> from the Categories section).</li>
+            <li style="margin-bottom:8px;"><strong>Adding an Offer:</strong>
+              <ul style="margin-left:20px; list-style-type:disc;">
+                <li>Go to "Menu Items" and click "New Item".</li>
+                <li>Enter the offer name (e.g. "Lunch Special Offer").</li>
+                <li>Select the "Discounts & Offers" category.</li>
+                <li>Set the discounted price in "Base Price".</li>
+                <li>Explain the discount details in the description fields.</li>
+              </ul>
+            </li>
+            <li style="margin-bottom:8px;"><strong>Adding a Package (Bakkage):</strong>
+              <ul style="margin-left:20px; list-style-type:disc;">
+                <li>Click "New Item" and enter the package name (e.g. "Family Healthy Package").</li>
+                <li>In the description fields, list the package items (e.g. 3 Main Meals + 3 Drinks).</li>
+                <li>To specify different package configurations, use the <strong>Portions</strong> section at the bottom
+                  (e.g. add "Package for 2" at 80 SAR, and "Package for 4" at 150 SAR).</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-green" onclick="closeGuideModal()" data-ar="حسناً" data-en="Got it">حسناً</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== ITEM MODAL ======== -->
+  <div id="item-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="item-modal-title" data-ar="إضافة صنف" data-en="Add Item">إضافة صنف</h3>
+        <button class="modal-close" onclick="closeItemModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Image Upload -->
+        <div id="item-img-placeholder" class="img-upload-area"
+          onclick="document.getElementById('item-img-input').click()">
+          <span class="material-symbols-outlined">add_photo_alternate</span>
+          <p data-ar="انقر لرفع صورة" data-en="Click to upload image">انقر لرفع صورة</p>
+        </div>
+        <img id="item-img-preview" class="hidden" alt="preview" />
+        <input type="file" id="item-img-input" accept="image/*" class="hidden" onchange="handleImgUpload(event)" />
+
+        <!-- Names -->
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ar="الاسم (EN)" data-en="Name (EN)">الاسم (EN)</label>
+            <input type="text" id="item-name-en" placeholder="Item name in English"
+              data-placeholder-ar="اسم الصنف بالإنجليزي" data-placeholder-en="Item name in English" />
+          </div>
+          <div class="form-group">
+            <label data-ar="الاسم (AR)" data-en="Name (AR)">الاسم (AR)</label>
+            <input type="text" id="item-name-ar" placeholder="اسم الصنف بالعربية"
+              data-placeholder-ar="اسم الصنف بالعربية" data-placeholder-en="Item name in Arabic" dir="rtl" />
+          </div>
+        </div>
+
+        <!-- Descriptions -->
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ar="الوصف (EN)" data-en="Description (EN)">الوصف (EN)</label>
+            <textarea id="item-desc-en" placeholder="Description in English" data-placeholder-ar="الوصف بالإنجليزي"
+              data-placeholder-en="Description in English"></textarea>
+          </div>
+          <div class="form-group">
+            <label data-ar="الوصف (AR)" data-en="Description (AR)">الوصف (AR)</label>
+            <textarea id="item-desc-ar" placeholder="الوصف بالعربية" data-placeholder-ar="الوصف بالعربية"
+              data-placeholder-en="Description in Arabic" dir="rtl"></textarea>
+          </div>
+        </div>
+
+        <!-- Category + Price -->
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ar="الفئة" data-en="Category">الفئة</label>
+            <select id="item-category">
+              <option value="chicken">دجاج / Chicken</option>
+              <option value="meat">لحوم / Meat</option>
+              <option value="carbs">كربوهيدرات / Carbs</option>
+              <option value="drinks">مشروبات / Drinks</option>
+              <option value="desserts">حلويات / Desserts</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-ar="السعر الأساسي (ر.س)" data-en="Base Price (SAR)">السعر الأساسي (ر.س)</label>
+            <input type="number" id="item-price" placeholder="0.00" min="0" step="0.01" oninput="updateDiscountPreview()" />
+          </div>
+        </div>
+
+        <!-- Discount Section -->
+        <div style="margin-bottom:14px;padding:12px;background:#f5f5f5;border-radius:8px;">
+          <div style="margin-bottom:8px;font-size:0.9rem;font-weight:700;color:#555;" data-ar="الخصم (اختياري)"
+            data-en="Discount (Optional)">الخصم (اختياري)</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-ar="نوع الخصم" data-en="Discount Type">نوع الخصم</label>
+              <select id="item-discount-type" onchange="updateDiscountPreview()">
+                <option value="none">لا يوجد / None</option>
+                <option value="percentage">نسبة مئوية % / Percentage</option>
+                <option value="fixed">مبلغ ثابت / Fixed Amount</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-ar="قيمة الخصم" data-en="Discount Value">قيمة الخصم</label>
+              <input type="number" id="item-discount-value" placeholder="0" min="0" step="0.01" oninput="updateDiscountPreview()" />
+            </div>
+          </div>
+          <div id="item-discount-preview" style="display:none;margin-top:8px;padding:10px;background:#fff;border:1px solid #e0e0e0;border-radius:8px;font-size:0.85rem;font-weight:800;color:#2e7d32;"></div>
+          <div style="font-size:0.8rem;color:#888;margin-top:6px;">
+            <span class="lang-ar">مثال: إذا اخترت نسبة مئوية 10% والسعر 100 ر.س، سيظهر السعر النهائي 90 ر.س</span>
+            <span class="lang-en" style="display:none;">Example: 10% discount on 100 SAR = 90 SAR final price</span>
+          </div>
+        </div>
+
+        <!-- Image Size Control -->
+        <div style="margin-bottom:14px;padding:12px;background:#f5f5f5;border-radius:8px;">
+          <div style="margin-bottom:8px;font-size:0.9rem;font-weight:700;color:#555;" data-ar="حجم الصورة"
+            data-en="Image Size">حجم الصورة</div>
+          <div class="form-group">
+            <label data-ar="حجم العرض" data-en="Display Size">حجم العرض</label>
+            <select id="item-image-size">
+              <option value="small">صغير / Small (80px)</option>
+              <option value="medium" selected>وسط / Medium (120px)</option>
+              <option value="large">كبير / Large (160px)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Nutrition -->
+        <div style="margin-bottom:6px;font-size:0.85rem;font-weight:700;color:#555;" data-ar="القيم الغذائية"
+          data-en="Nutrition">القيم الغذائية</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ar="السعرات" data-en="Calories">السعرات</label>
+            <input type="number" id="item-cal" placeholder="0" min="0" />
+          </div>
+          <div class="form-group">
+            <label data-ar="بروتين (ج)" data-en="Protein (g)">بروتين (ج)</label>
+            <input type="number" id="item-protein" placeholder="0" min="0" step="0.1" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label data-ar="كربوهيدرات (ج)" data-en="Carbs (g)">كربوهيدرات (ج)</label>
+            <input type="number" id="item-carbs" placeholder="0" min="0" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label data-ar="دهون (ج)" data-en="Fats (g)">دهون (ج)</label>
+            <input type="number" id="item-fats" placeholder="0" min="0" step="0.1" />
+          </div>
+        </div>
+
+        <!-- Visible -->
+        <div style="margin-bottom:14px;">
+          <label class="checkbox-row">
+            <input type="checkbox" id="item-visible" checked />
+            <span data-ar="ظاهر في القائمة" data-en="Visible in menu">ظاهر في القائمة</span>
+          </label>
+        </div>
+
+        <!-- PORTIONS SECTION -->
+        <div id="portions-section">
+          <div class="portions-header" data-ar="الكميات والأحجام / PORTIONS" data-en="PORTIONS / الكميات والأحجام">
+            PORTIONS / الكميات والأحجام</div>
+          <div class="portions-preset-btns">
+            <button type="button" class="btn btn-outline" onclick="addPresetPortions()">+ صغير / وسط / كبير</button>
+            <button type="button" class="btn btn-outline" onclick="addGramPortions()">+ 100g / 150g / 200g</button>
+            <button type="button" class="btn btn-gray" onclick="clearPortions()">مسح الكل</button>
+            <button type="button" class="btn btn-green" onclick="addPortionRow('','')">+ إضافة</button>
+          </div>
+          <div id="portions-container"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-gray" onclick="closeItemModal()" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+        <button class="btn btn-green" onclick="saveItem()" data-ar="حفظ الصنف" data-en="Save Item">حفظ الصنف</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== CATEGORY MODAL ======== -->
+  <div id="cat-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 id="cat-modal-title" data-ar="إضافة فئة" data-en="Add Category">إضافة فئة</h3>
+        <button class="modal-close" onclick="closeCatModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الاسم (EN)" data-en="Name (EN)">الاسم (EN)</label>
+          <input type="text" id="cat-name-en" placeholder="Category name in English"
+            data-placeholder-ar="اسم الفئة بالإنجليزي" data-placeholder-en="Category name in English" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الاسم (AR)" data-en="Name (AR)">الاسم (AR)</label>
+          <input type="text" id="cat-name-ar" placeholder="اسم الفئة بالعربية" data-placeholder-ar="اسم الفئة بالعربية"
+            data-placeholder-en="Category name in Arabic" dir="rtl" />
+        </div>
+        <div class="form-group">
+          <label data-ar="المعرف" data-en="ID / Slug">المعرف</label>
+          <input type="text" id="cat-id" placeholder="e.g. chicken" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-gray" onclick="closeCatModal()" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+        <button class="btn btn-green" onclick="saveCat()" data-ar="حفظ" data-en="Save">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== GUIDELINE MODAL ======== -->
+  <div id="guideline-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 data-ar="إضافة إرشادة صحية" data-en="Add Health Guideline">إضافة إرشادة صحية</h3>
+        <button class="modal-close" onclick="closeGuidelineModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الرمز التعبيري (Emoji)" data-en="Emoji">الرمز التعبيري (Emoji)</label>
+          <input type="text" id="guideline-emoji" placeholder="e.g. 🌾" maxlength="5" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="العنوان (EN)" data-en="Title (EN)">العنوان (EN)</label>
+          <input type="text" id="guideline-title-en" placeholder="e.g. Fiber" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="العنوان (AR)" data-en="Title (AR)">العنوان (AR)</label>
+          <input type="text" id="guideline-title-ar" placeholder="مثال: الألياف" dir="rtl" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الوصف (EN)" data-en="Description (EN)">الوصف (EN)</label>
+          <textarea id="guideline-desc-en" placeholder="Description in English..." style="min-height:80px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label data-ar="الوصف (AR)" data-en="Description (AR)">الوصف (AR)</label>
+          <textarea id="guideline-desc-ar" placeholder="الوصف بالعربية..." dir="rtl"
+            style="min-height:80px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-gray" onclick="closeGuidelineModal()" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+        <button class="btn btn-green" onclick="saveGuideline()" data-ar="حفظ" data-en="Save">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======== SOCIAL LINK MODAL ======== -->
+  <div id="social-link-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 data-ar="إضافة رابط اجتماعي" data-en="Add Social Link">إضافة رابط اجتماعي</h3>
+        <button class="modal-close" onclick="closeSocialLinkModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الاسم (Label)" data-en="Label">الاسم (Label)</label>
+          <input type="text" id="social-link-label" placeholder="e.g. Instagram" />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الرابط (URL)" data-en="URL">الرابط (URL)</label>
+          <input type="url" id="social-link-url" placeholder="https://..." />
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="الرمز (Icon Emoji or name)" data-en="Icon">الرمز (Icon Emoji or name)</label>
+          <input type="text" id="social-link-icon" placeholder="📸 or instagram" maxlength="20" />
+        </div>
+        <div class="form-group">
+          <label data-ar="اللون (Hex)" data-en="Color (Hex)">اللون (Hex)</label>
+          <input type="text" id="social-link-color" placeholder="#E1306C" maxlength="7" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-gray" onclick="closeSocialLinkModal()" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+        <button class="btn btn-green" onclick="saveSocialLink()" data-ar="حفظ" data-en="Save">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =============================================
+    // CORE DATA FUNCTIONS
+    // =============================================
+    var API_BASE = window.location.origin.indexOf('file:') === 0 ? 'http://localhost:5000' : '';
+
+    async function apiGet(path) {
+      var res = await fetch(API_BASE + path);
+      if (!res.ok) throw new Error('API GET failed: ' + path);
+      return res.json();
+    }
+
+    async function apiPost(path, body) {
+      var res = await fetch(API_BASE + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error('API POST failed: ' + path);
+      return res.json();
+    }
+
+    function syncCollection(path, data) {
+      apiPost(path + '/sync', data).catch(function (err) {
+        console.error(err);
+        showToast(isAR() ? 'تم الحفظ محلياً فقط - تحقق من اتصال السيرفر' : 'Saved locally only - check API connection');
+      });
+    }
+
+    async function loadRemoteData() {
+      try {
+        var results = await Promise.all([
+          apiGet('/api/items'),
+          apiGet('/api/categories'),
+          apiGet('/api/guidelines'),
+          apiGet('/api/social-links'),
+          apiGet('/api/settings')
+        ]);
+        localStorage.setItem('wh_items', JSON.stringify(results[0] || []));
+        if (results[1] && results[1].length) localStorage.setItem('wh_categories', JSON.stringify(results[1]));
+        localStorage.setItem('wh_guidelines', JSON.stringify(results[2] || []));
+        localStorage.setItem('wh_social_links', JSON.stringify(results[3] || []));
+        applySettingsFromApi(results[4] || {});
+        renderItemsTable();
+        renderCatsTable();
+        updateDashboardStats();
+        renderRecentItems();
+        renderGuidelinesList();
+        renderSocialLinksList();
+        loadSettings();
+        loadAboutUs();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function applySettingsFromApi(settings) {
+      if (!settings || !Object.keys(settings).length) return;
+      if (settings.captionEn) localStorage.setItem('wh_caption_en', settings.captionEn);
+      if (settings.captionAr) localStorage.setItem('wh_caption_ar', settings.captionAr);
+      if (typeof settings.bannerEnabled === 'boolean') localStorage.setItem('wh_banner_enabled', settings.bannerEnabled ? 'true' : 'false');
+      if (settings.bannerText !== undefined) localStorage.setItem('wh_banner_text', settings.bannerText || '');
+      if (settings.menuUrl !== undefined) localStorage.setItem('wh_menu_url', settings.menuUrl || '');
+      if (typeof settings.appDownloadEnabled === 'boolean') localStorage.setItem('wh_app_download_enabled', settings.appDownloadEnabled ? 'true' : 'false');
+      if (settings.androidAppUrl !== undefined) localStorage.setItem('wh_android_app_url', settings.androidAppUrl || '');
+      if (settings.iosAppUrl !== undefined) localStorage.setItem('wh_ios_app_url', settings.iosAppUrl || '');
+      if (settings.logo) localStorage.setItem('wh_logo', settings.logo);
+      if (settings.coverImage) localStorage.setItem('wh_cover_image', settings.coverImage);
+      if (settings.aboutTextEn !== undefined) localStorage.setItem('wh_about_text_en', settings.aboutTextEn || '');
+      if (settings.aboutTextAr !== undefined) localStorage.setItem('wh_about_text_ar', settings.aboutTextAr || '');
+    }
+
+    function collectSettingsPayload() {
+      var extra = {};
+      try { extra = JSON.parse(localStorage.getItem('wh_settings') || '{}'); } catch (e) { }
+      return Object.assign({}, extra, {
+        captionEn: localStorage.getItem('wh_caption_en') || 'HEALTHY CHOICES HAPPY LIVES',
+        captionAr: localStorage.getItem('wh_caption_ar') || 'خيارات صحية، حياة سعيدة',
+        bannerEnabled: localStorage.getItem('wh_banner_enabled') === 'true',
+        bannerText: localStorage.getItem('wh_banner_text') || '',
+        menuUrl: localStorage.getItem('wh_menu_url') || '',
+        appDownloadEnabled: localStorage.getItem('wh_app_download_enabled') !== 'false',
+        androidAppUrl: localStorage.getItem('wh_android_app_url') || '',
+        iosAppUrl: localStorage.getItem('wh_ios_app_url') || '',
+        logo: localStorage.getItem('wh_logo') || '',
+        coverImage: localStorage.getItem('wh_cover_image') || '',
+        aboutTextEn: localStorage.getItem('wh_about_text_en') || '',
+        aboutTextAr: localStorage.getItem('wh_about_text_ar') || ''
+      });
+    }
+
+    function syncSettings() {
+      apiPost('/api/settings', collectSettingsPayload()).catch(function (err) {
+        console.error(err);
+        showToast(isAR() ? 'تم الحفظ محلياً فقط - تحقق من اتصال السيرفر' : 'Saved locally only - check API connection');
+      });
+    }
+
+    function getItems() {
+      try { return JSON.parse(localStorage.getItem('wh_items') || '[]'); } catch (e) { return []; }
+    }
+    function saveItems(items) {
+      localStorage.setItem('wh_items', JSON.stringify(items));
+      syncCollection('/api/items', items);
+    }
+    function getCategories() {
+      var def = [
+        { id: 'chicken', nameAr: 'دجاج', nameEn: 'Chicken' },
+        { id: 'meat', nameAr: 'لحوم', nameEn: 'Meat' },
+        { id: 'carbs', nameAr: 'كربوهيدرات', nameEn: 'Carbs' },
+        { id: 'drinks', nameAr: 'مشروبات', nameEn: 'Drinks' },
+        { id: 'desserts', nameAr: 'حلويات', nameEn: 'Desserts' },
+        { id: 'discount', nameAr: 'الخصومات والعروض', nameEn: 'Discounts & Offers' }
+      ];
+      try {
+        var stored = JSON.parse(localStorage.getItem('wh_categories') || 'null');
+        return stored && stored.length ? stored : def;
+      } catch (e) { return def; }
+    }
+
+    // =============================================
+    // GUIDE MODAL
+    // =============================================
+    function openGuideModal() {
+      document.getElementById('guide-modal').classList.remove('hidden');
+    }
+    function closeGuideModal() {
+      document.getElementById('guide-modal').classList.add('hidden');
+    }
+    function saveCategories(cats) {
+      localStorage.setItem('wh_categories', JSON.stringify(cats));
+      syncCollection('/api/categories', cats);
+    }
+    function getReviews() {
+      try { return JSON.parse(localStorage.getItem('wh_ratings') || '[]'); } catch (e) { return []; }
+    }
+    function getCatName(id) {
+      var cats = getCategories();
+      var cat = cats.find(function (c) { return c.id === id; });
+      if (!cat) return id;
+      return isAR() ? cat.nameAr : cat.nameEn;
+    }
+    function isAR() {
+      return document.documentElement.getAttribute('dir') === 'rtl';
+    }
+
+    // =============================================
+    // LANGUAGE TOGGLE
+    // =============================================
+    function toggleLang() {
+      var html = document.documentElement;
+      if (html.getAttribute('dir') === 'rtl') {
+        html.setAttribute('dir', 'ltr');
+        html.setAttribute('lang', 'en');
+        localStorage.setItem('adminLang', 'en');
+        document.getElementById('lang-toggle').textContent = 'AR';
+        applyLangTexts('en');
+      } else {
+        html.setAttribute('dir', 'rtl');
+        html.setAttribute('lang', 'ar');
+        localStorage.setItem('adminLang', 'ar');
+        document.getElementById('lang-toggle').textContent = 'EN';
+        applyLangTexts('ar');
+      }
+    }
+    function applyLangTexts(lang) {
+      document.querySelectorAll('[data-ar][data-en]').forEach(function (el) {
+        el.textContent = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+      });
+      // Translate placeholders
+      document.querySelectorAll('[data-placeholder-ar][data-placeholder-en]').forEach(function (el) {
+        el.placeholder = lang === 'ar' ? el.getAttribute('data-placeholder-ar') : el.getAttribute('data-placeholder-en');
+      });
+      var searchInput = document.getElementById('items-search');
+      if (searchInput) {
+        searchInput.placeholder = lang === 'ar' ? searchInput.getAttribute('data-placeholder-ar') : searchInput.getAttribute('data-placeholder-en');
+      }
+      // Redraw tables with new language
+      renderItemsTable();
+      renderCatsTable();
+      renderRecentItems();
+      renderReviewsTable();
+      populateCategorySelect();
+    }
+    function initLang() {
+      var saved = localStorage.getItem('adminLang') || 'ar';
+      var html = document.documentElement;
+      if (saved === 'en') {
+        html.setAttribute('dir', 'ltr');
+        html.setAttribute('lang', 'en');
+        document.getElementById('lang-toggle').textContent = 'AR';
+        applyLangTexts('en');
+      } else {
+        html.setAttribute('dir', 'rtl');
+        html.setAttribute('lang', 'ar');
+        document.getElementById('lang-toggle').textContent = 'EN';
+        applyLangTexts('ar');
+      }
+    }
+
+    // =============================================
+    // SECTION NAVIGATION
+    // =============================================
+    function showSection(name) {
+      var panels = document.querySelectorAll('.panel');
+      panels.forEach(function (p) { p.classList.remove('active'); });
+      var target = document.getElementById('panel-' + name);
+      if (target) target.classList.add('active');
+
+      var navItems = document.querySelectorAll('.nav-item');
+      var sectionMap = ['dashboard', 'categories', 'items', 'qrcode', 'settings', 'guidelines', 'about', 'social', 'reviews'];
+      navItems.forEach(function (btn, i) {
+        btn.classList.toggle('active', sectionMap[i] === name);
+      });
+
+      if (name === 'items') renderItemsTable();
+      if (name === 'dashboard') { updateDashboardStats(); renderRecentItems(); }
+      if (name === 'qrcode') { setTimeout(function () { loadUploadedQR(); }, 100); }
+      if (name === 'categories') renderCatsTable();
+      if (name === 'guidelines') renderGuidelinesList();
+      if (name === 'about') loadAboutUs();
+      if (name === 'social') renderSocialLinksList();
+      if (name === 'reviews') renderReviewsTable();
+    }
+
+    // =============================================
+    // DASHBOARD
+    // =============================================
+    function updateDashboardStats() {
+      var items = getItems();
+      document.getElementById('stat-total').textContent = items.length;
+      document.getElementById('stat-cats').textContent = getCategories().length;
+      var vis = items.filter(function (i) { return i.visible !== false; }).length;
+      document.getElementById('stat-visible').textContent = vis;
+      document.getElementById('stat-hidden').textContent = items.length - vis;
+      document.getElementById('stat-reviews').textContent = getReviews().length;
+    }
+    function renderRecentItems() {
+      var items = getItems().slice(-5).reverse();
+      var el = document.getElementById('recent-items-list');
+      if (!items.length) { el.innerHTML = '<p style="color:#aaa;font-size:0.9rem;padding:8px 0;">لا توجد أصناف بعد</p>'; return; }
+      el.innerHTML = items.map(function (item) {
+        var imgHtml = item.img
+          ? '<img src="' + item.img + '" alt="" />'
+          : '<div style="width:44px;height:44px;background:#e8f5e9;border-radius:8px;display:flex;align-items:center;justify-content:center;"><span class=\"material-symbols-outlined\" style=\"color:#4CAF50;\">restaurant</span></div>';
+        return '<div class="recent-item">' + imgHtml +
+          '<div class="ri-info"><div class="ri-name">' + (item.nameAr || item.nameEn || '-') + '</div>' +
+          '<div class="ri-cat">' + getCatName(item.category) + '</div></div>' +
+          '<div style="font-weight:700;color:#4CAF50;">' + (item.price || '0') + ' ر.س</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    // =============================================
+    // ITEMS TABLE
+    // =============================================
+    function renderItemsTable() {
+      var items = getItems();
+      var searchInput = document.getElementById('items-search');
+      var searchQuery = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      if (searchQuery) {
+        items = items.filter(function (item) {
+          var nameEn = (item.nameEn || '').toLowerCase();
+          var nameAr = (item.nameAr || '').toLowerCase();
+          var catName = (getCatName(item.category) || '').toLowerCase();
+          return nameEn.indexOf(searchQuery) !== -1 || nameAr.indexOf(searchQuery) !== -1 || catName.indexOf(searchQuery) !== -1;
+        });
+      }
+      var tbody = document.getElementById('items-tbody');
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:28px;">' + (isAR() ? 'لا توجد نتائج' : 'No results found') + '</td></tr>';
+        return;
+      }
+      tbody.innerHTML = items.map(function (item) {
+        var imgHtml = item.img
+          ? '<img src="' + item.img + '" style="width:44px;height:44px;object-fit:cover;border-radius:7px;" />'
+          : '<div style="width:44px;height:44px;background:#e8f5e9;border-radius:7px;display:flex;align-items:center;justify-content:center;"><span class=\"material-symbols-outlined\" style=\"color:#4CAF50;\">restaurant</span></div>';
+        var vis = item.visible !== false;
+        return '<tr>' +
+          '<td>' + imgHtml + '</td>' +
+          '<td>' + (item.nameEn || '-') + '</td>' +
+          '<td>' + (item.nameAr || '-') + '</td>' +
+          '<td>' + getCatName(item.category) + '</td>' +
+          '<td>' + (item.price || '0') + (isAR() ? ' ر.س' : ' SAR') + '</td>' +
+          '<td><span class="badge ' + (vis ? 'badge-green' : 'badge-red') + '">' + (vis ? (isAR() ? 'ظاهر' : 'Visible') : (isAR() ? 'مخفي' : 'Hidden')) + '</span></td>' +
+          '<td style="display:flex;gap:6px;align-items:center;">' +
+          '<button class="btn btn-blue" style="padding:5px 10px;" onclick="openItemModal(' + item.id + ')"><span class="material-symbols-outlined" style="font-size:16px;">edit</span></button>' +
+          '<button class="btn btn-red" style="padding:5px 10px;" onclick="deleteItem(' + item.id + ')"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+    }
+    function deleteItem(id) {
+      if (!confirm(isAR() ? 'هل تريد حذف هذا الصنف؟' : 'Are you sure you want to delete this item?')) return;
+      var items = getItems().filter(function (i) { return i.id != id; });
+      saveItems(items);
+      renderItemsTable();
+      updateDashboardStats();
+      showToast(isAR() ? 'تم حذف الصنف' : 'Item deleted');
+    }
+    function toggleVisible(id) {
+      var items = getItems();
+      items = items.map(function (i) {
+        if (i.id == id) i.visible = !i.visible;
+        return i;
+      });
+      saveItems(items);
+      renderItemsTable();
+      updateDashboardStats();
+    }
+  </script>
+
+  <script>
+    // =============================================
+    // PORTIONS FUNCTIONS
+    // =============================================
+    function getPortions() {
+      var rows = document.querySelectorAll('#portions-container .portion-row');
+      var result = [];
+      rows.forEach(function (row) {
+        var labelEl = row.querySelector('[data-portion="label"]');
+        var priceEl = row.querySelector('[data-portion="price"]');
+        var label = labelEl ? labelEl.value.trim() : '';
+        var price = priceEl ? priceEl.value.trim() : '';
+        if (label || price) result.push({ label: label, price: price });
+      });
+      return result;
+    }
+    function setPortions(arr) {
+      clearPortions();
+      if (!arr || !arr.length) return;
+      arr.forEach(function (p) {
+        addPortionRow(p.label || '', p.price || '');
+      });
+    }
+    function addPortionRow(label, price) {
+      var container = document.getElementById('portions-container');
+      var row = document.createElement('div');
+      row.className = 'portion-row';
+      row.innerHTML =
+        '<input type="text" data-portion="label" placeholder="الوصف (مثال: 100 جرام)" value="' + (label || '') + '" />' +
+        '<input type="number" data-portion="price" placeholder="السعر ر.س" value="' + (price || '') + '" min="0" step="0.01" />' +
+        '<button type="button" class="portion-del" onclick="this.parentElement.remove()">✕</button>';
+      container.appendChild(row);
+    }
+    function addPresetPortions() {
+      clearPortions();
+      addPortionRow('صغير', '');
+      addPortionRow('وسط', '');
+      addPortionRow('كبير', '');
+    }
+    function addGramPortions() {
+      clearPortions();
+      addPortionRow('100 جرام', '');
+      addPortionRow('150 جرام', '');
+      addPortionRow('200 جرام', '');
+    }
+    function clearPortions() {
+      document.getElementById('portions-container').innerHTML = '';
+    }
+
+    function getDiscountResult(price, type, value) {
+      var base = parseFloat(price);
+      var discountValue = parseFloat(value);
+      if (!base || base <= 0 || !discountValue || discountValue <= 0 || type === 'none') {
+        return null;
+      }
+
+      var percent = type === 'percentage' ? discountValue : (discountValue / base) * 100;
+      var finalPrice = type === 'percentage' ? base * (100 - discountValue) / 100 : base - discountValue;
+      finalPrice = Math.max(finalPrice, 0);
+      percent = Math.max(Math.min(percent, 100), 0);
+      return {
+        percent: percent,
+        finalPrice: finalPrice
+      };
+    }
+
+    function updateDiscountPreview() {
+      var preview = document.getElementById('item-discount-preview');
+      if (!preview) return;
+      var price = document.getElementById('item-price').value;
+      var type = document.getElementById('item-discount-type').value;
+      var value = document.getElementById('item-discount-value').value;
+      var result = getDiscountResult(price, type, value);
+      if (!result) {
+        preview.style.display = 'none';
+        preview.textContent = '';
+        return;
+      }
+      var percent = result.percent.toFixed(result.percent % 1 ? 1 : 0);
+      var finalPrice = result.finalPrice.toFixed(result.finalPrice % 1 ? 2 : 0);
+      preview.style.display = 'block';
+      preview.textContent = isAR()
+        ? 'نسبة الخصم: ' + percent + '% - السعر بعد الخصم: ' + finalPrice + ' ر.س'
+        : 'Discount: ' + percent + '% - Final price: ' + finalPrice + ' SAR';
+    }
+
+    // =============================================
+    // ITEM MODAL
+    // =============================================
+    function populateCategorySelect() {
+      var select = document.getElementById('item-category');
+      if (!select) return;
+      var cats = getCategories();
+      select.innerHTML = cats.map(function (cat) {
+        var label = cat.nameAr + ' / ' + cat.nameEn;
+        return '<option value="' + cat.id + '">' + label + '</option>';
+      }).join('');
+    }
+    function openItemModal(editId) {
+      var modal = document.getElementById('item-modal');
+      modal.classList.remove('hidden');
+      modal.dataset.editId = editId || '';
+
+      // Populate Categories dropdown dynamically
+      populateCategorySelect();
+
+      // Reset form
+      document.getElementById('item-name-en').value = '';
+      document.getElementById('item-name-ar').value = '';
+      document.getElementById('item-desc-en').value = '';
+      document.getElementById('item-desc-ar').value = '';
+      document.getElementById('item-price').value = '';
+      document.getElementById('item-cal').value = '';
+      document.getElementById('item-protein').value = '';
+      document.getElementById('item-carbs').value = '';
+      document.getElementById('item-fats').value = '';
+      document.getElementById('item-discount-type').value = 'none';
+      document.getElementById('item-discount-value').value = '';
+      updateDiscountPreview();
+      document.getElementById('item-image-size').value = 'medium';
+      document.getElementById('item-visible').checked = true;
+      clearPortions();
+
+      // Reset image
+      var preview = document.getElementById('item-img-preview');
+      var placeholder = document.getElementById('item-img-placeholder');
+      preview.src = '';
+      preview.classList.add('hidden');
+      placeholder.style.display = '';
+      document.getElementById('item-img-input').value = '';
+
+      var titleEl = document.getElementById('item-modal-title');
+
+      if (editId) {
+        titleEl.textContent = isAR() ? 'تعديل الصنف' : 'Edit Item';
+        var items = getItems();
+        var item = items.find(function (i) { return i.id == editId; });
+        if (item) {
+          document.getElementById('item-name-en').value = item.nameEn || '';
+          document.getElementById('item-name-ar').value = item.nameAr || '';
+          document.getElementById('item-desc-en').value = item.descEn || '';
+          document.getElementById('item-desc-ar').value = item.descAr || '';
+          document.getElementById('item-category').value = item.category || '';
+          document.getElementById('item-price').value = item.price || '';
+          document.getElementById('item-cal').value = item.cal || '';
+          document.getElementById('item-protein').value = item.protein || '';
+          document.getElementById('item-carbs').value = item.carbs || '';
+          document.getElementById('item-fats').value = item.fats || '';
+          document.getElementById('item-discount-type').value = item.discountType || 'none';
+          document.getElementById('item-discount-value').value = item.discountValue || '';
+          updateDiscountPreview();
+          document.getElementById('item-image-size').value = item.imageSize || 'medium';
+          document.getElementById('item-visible').checked = item.visible !== false;
+          if (item.img) {
+            preview.src = item.img;
+            preview.classList.remove('hidden');
+            placeholder.style.display = 'none';
+          }
+          if (item.portions && item.portions.length) {
+            setPortions(item.portions);
+          }
+        }
+      } else {
+        titleEl.textContent = isAR() ? 'إضافة صنف' : 'Add Item';
+      }
+    }
+    function closeItemModal() {
+      var modal = document.getElementById('item-modal');
+      modal.classList.add('hidden');
+      modal.dataset.editId = '';
+    }
+
+    // =============================================
+    // SAVE ITEM — THE CRITICAL FUNCTION
+    // =============================================
+    function saveItem() {
+      var nameEn = document.getElementById('item-name-en').value.trim();
+      var nameAr = document.getElementById('item-name-ar').value.trim();
+      if (!nameEn && !nameAr) { alert('أدخل اسم الصنف'); return; }
+
+      var editId = document.getElementById('item-modal').dataset.editId;
+      var imgEl = document.getElementById('item-img-preview');
+      var img = (imgEl && !imgEl.classList.contains('hidden')) ? imgEl.src : '';
+      var visible = document.getElementById('item-visible').checked;
+
+      var item = {
+        id: (editId && editId !== '') ? parseInt(editId) : Date.now(),
+        nameEn: nameEn,
+        nameAr: nameAr,
+        descEn: document.getElementById('item-desc-en').value.trim(),
+        descAr: document.getElementById('item-desc-ar').value.trim(),
+        category: document.getElementById('item-category').value,
+        price: document.getElementById('item-price').value,
+        cal: document.getElementById('item-cal').value,
+        protein: document.getElementById('item-protein').value,
+        carbs: document.getElementById('item-carbs').value,
+        fats: document.getElementById('item-fats').value,
+        fat: document.getElementById('item-fats').value,
+        discountType: document.getElementById('item-discount-type').value,
+        discountValue: document.getElementById('item-discount-value').value,
+        imageSize: document.getElementById('item-image-size').value,
+        portions: getPortions(),
+        priceSm: '',
+        priceMd: document.getElementById('item-price').value,
+        priceLg: '',
+        img: img,
+        visible: visible
+      };
+
+      var items = getItems();
+      if (editId && editId !== '') {
+        items = items.map(function (i) { return i.id == editId ? item : i; });
+      } else {
+        items.push(item);
+      }
+
+      try {
+        saveItems(items);
+        closeItemModal();
+        renderItemsTable();
+        updateDashboardStats();
+        showToast((editId && editId !== '') ? (isAR() ? 'تم تحديث الصنف ✓' : 'Item updated ✓') : (isAR() ? 'تم إضافة الصنف ✓' : 'Item added ✓'));
+      } catch (e) {
+        console.error(e);
+        alert(isAR() ?
+          'فشل حفظ الصنف. حجم الصورة كبير جداً، يرجى رفع صورة أصغر حجماً.' :
+          'Failed to save item. The image size is too large, please upload a smaller image.');
+      }
+    }
+    // =============================================
+    // IMAGE UPLOAD HANDLER
+    // =============================================
+    function handleImgUpload(event) {
+      var file = event.target.files[0];
+      if (!file) return;
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var imgElement = new Image();
+        imgElement.onload = function () {
+          // Create a canvas to downscale and compress
+          var canvas = document.createElement('canvas');
+          var max_width = 600; // max width
+          var max_height = 600; // max height
+          var width = imgElement.width;
+          var height = imgElement.height;
+
+          if (width > height) {
+            if (width > max_width) {
+              height = Math.round((height * max_width) / width);
+              width = max_width;
+            }
+          } else {
+            if (height > max_height) {
+              width = Math.round((width * max_height) / height);
+              height = max_height;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(imgElement, 0, 0, width, height);
+
+          // Compress to JPEG with 0.7 quality to keep size small (~30-50kb)
+          var compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+          var preview = document.getElementById('item-img-preview');
+          var placeholder = document.getElementById('item-img-placeholder');
+          preview.src = compressedDataUrl;
+          preview.classList.remove('hidden');
+          placeholder.style.display = 'none';
+        };
+        imgElement.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // =============================================
+    // CATEGORIES TABLE
+    // =============================================
+    function renderCatsTable() {
+      var cats = getCategories();
+      var tbody = document.getElementById('cats-tbody');
+      tbody.innerHTML = cats.map(function (cat) {
+        return '<tr>' +
+          '<td>' + (cat.nameAr || '-') + '</td>' +
+          '<td>' + (cat.nameEn || '-') + '</td>' +
+          '<td><code>' + cat.id + '</code></td>' +
+          '<td style="display:flex;gap:6px;">' +
+          '<button class="btn btn-blue" style="padding:5px 10px;" onclick="editCat(\'' + cat.id + '\')"><span class="material-symbols-outlined" style="font-size:16px;">edit</span></button>' +
+          '<button class="btn btn-red" style="padding:5px 10px;" onclick="deleteCat(\'' + cat.id + '\')"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button>' +
+          '</td>' +
+          '</tr>';
+      }).join('');
+    }
+    function openCatModal() {
+      document.getElementById('cat-modal').classList.remove('hidden');
+      document.getElementById('cat-modal').dataset.editId = '';
+      document.getElementById('cat-name-en').value = '';
+      document.getElementById('cat-name-ar').value = '';
+      document.getElementById('cat-id').value = '';
+    }
+    function closeCatModal() {
+      document.getElementById('cat-modal').classList.add('hidden');
+    }
+    function saveCat() {
+      var nameEn = document.getElementById('cat-name-en').value.trim();
+      var nameAr = document.getElementById('cat-name-ar').value.trim();
+      var id = document.getElementById('cat-id').value.trim().toLowerCase().replace(/\s+/g, '-');
+      if (!id || (!nameEn && !nameAr)) { alert('أدخل بيانات الفئة'); return; }
+      var cats = getCategories();
+      var editId = document.getElementById('cat-modal').dataset.editId;
+      if (editId) {
+        cats = cats.map(function (c) { return c.id === editId ? { id: id, nameEn: nameEn, nameAr: nameAr } : c; });
+      } else {
+        if (cats.find(function (c) { return c.id === id; })) { alert('هذا المعرف موجود بالفعل'); return; }
+        cats.push({ id: id, nameEn: nameEn, nameAr: nameAr });
+      }
+      saveCategories(cats);
+      closeCatModal();
+      renderCatsTable();
+      showToast(isAR() ? 'تم حفظ الفئة ✓' : 'Category saved ✓');
+    }
+    function editCat(id) {
+      var cats = getCategories();
+      var cat = cats.find(function (c) { return c.id === id; });
+      if (!cat) return;
+      document.getElementById('cat-modal').classList.remove('hidden');
+      document.getElementById('cat-modal').dataset.editId = id;
+      document.getElementById('cat-name-en').value = cat.nameEn || '';
+      document.getElementById('cat-name-ar').value = cat.nameAr || '';
+      document.getElementById('cat-id').value = cat.id;
+    }
+    function deleteCat(id) {
+      if (!confirm(isAR() ? 'حذف هذه الفئة؟' : 'Delete this category?')) return;
+      var cats = getCategories().filter(function (c) { return c.id !== id; });
+      saveCategories(cats);
+      renderCatsTable();
+      showToast(isAR() ? 'تم حذف الفئة' : 'Category deleted');
+    }
+
+    // =============================================
+    // REVIEWS TABLE
+    // =============================================
+    function renderReviewsTable() {
+      var reviews = getReviews();
+      var tbody = document.getElementById('reviews-tbody');
+      if (!reviews.length) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:24px;">لا توجد تقييمات بعد</td></tr>';
+        return;
+      }
+      tbody.innerHTML = reviews.map(function (r) {
+        var stars = '';
+        for (var s = 1; s <= 5; s++) stars += s <= (r.stars || r.rating || 0) ? '★' : '☆';
+        var d = r.timestamp ? new Date(r.timestamp).toLocaleString(isAR() ? 'ar-SA' : 'en-US') : '-';
+        return '<tr><td>' + (r.itemName || r.item || '-') + '</td><td style="color:#f39c12;font-size:1.1rem;">' + stars + '</td><td>' + d + '</td></tr>';
+      }).join('');
+    }
+
+    // =============================================
+    // QR CODE
+    // =============================================
+
+    function setQRMode(mode) {
+      qrMode = mode;
+      var genBtn = document.getElementById('mode-gen-btn');
+      var uploadBtn = document.getElementById('mode-upload-btn');
+      var genSection = document.getElementById('qr-gen-section');
+      var uploadSection = document.getElementById('qr-upload-section');
+      var canvas = document.getElementById('qr-canvas');
+      var previewWrap = document.getElementById('qr-uploaded-preview-wrap');
+
+      if (mode === 'generate') {
+        genBtn.className = 'btn btn-green';
+        uploadBtn.className = 'btn btn-outline';
+        genSection.style.display = 'block';
+        uploadSection.style.display = 'none';
+        canvas.style.display = 'block';
+        previewWrap.style.display = 'none';
+        generateQR();
+      } else {
+        genBtn.className = 'btn btn-outline';
+        uploadBtn.className = 'btn btn-green';
+        genSection.style.display = 'none';
+        uploadSection.style.display = 'block';
+        canvas.style.display = 'none';
+        previewWrap.style.display = 'block';
+        loadUploadedQR();
+      }
+    }
+
+    function handleQRUpload(event) {
+      var file = event.target.files[0];
+      if (!file) return;
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var imgElement = new Image();
+        imgElement.onload = function () {
+          var canvas = document.createElement('canvas');
+          var max_size = 500;
+          var width = imgElement.width;
+          var height = imgElement.height;
+          if (width > height) {
+            if (width > max_size) { height = Math.round((height * max_size) / width); width = max_size; }
+          } else {
+            if (height > max_size) { width = Math.round((width * max_size) / height); height = max_size; }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(imgElement, 0, 0, width, height);
+          var compressedDataUrl = canvas.toDataURL('image/png');
+          try {
+            localStorage.setItem('wh_uploaded_qr', compressedDataUrl);
+            try { sessionStorage.setItem('wh_uploaded_qr', compressedDataUrl); } catch (e) { }
+            displayUploadedQR(compressedDataUrl);
+            showToast(isAR() ? 'تم رفع رمز QR ✓' : 'QR uploaded ✓');
+          } catch (err) {
+            console.error(err);
+            alert(isAR() ? 'حجم الصورة كبير جداً، يرجى رفع صورة أصغر.' : 'Image is too large. Please upload a smaller image.');
+          }
+        };
+        imgElement.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function displayUploadedQR(dataUrl) {
+      var preview = document.getElementById('qr-uploaded-preview');
+      var placeholder = document.getElementById('qr-upload-placeholder');
+      var wrap = document.getElementById('qr-uploaded-preview-wrap');
+      if (dataUrl) {
+        preview.src = dataUrl;
+        preview.classList.remove('hidden');
+        preview.style.display = 'block';
+        if (wrap) wrap.style.display = 'block';
+        if (placeholder) placeholder.textContent = isAR() ? 'انقر لتغيير الصورة المرفوعة' : 'Click to change the uploaded image';
+      } else {
+        preview.src = '';
+        preview.classList.add('hidden');
+        preview.style.display = 'none';
+        if (wrap) wrap.style.display = 'none';
+        if (placeholder) {
+          placeholder.setAttribute('data-ar', 'انقر لرفع صورة رمز QR');
+          placeholder.setAttribute('data-en', 'Click to upload QR Code image');
+          placeholder.textContent = isAR() ? 'انقر لرفع صورة رمز QR' : 'Click to upload QR Code image';
+        }
+      }
+    }
+
+    var __DEFAULT_QR__ = "data:image/png;base64,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";
+
+    function loadUploadedQR() {
+      // 1. Check for embedded QR (baked into HTML — works on all devices/domains)
+      if (typeof __EMBEDDED_QR__ !== 'undefined' && __EMBEDDED_QR__) {
+        displayUploadedQR(__EMBEDDED_QR__);
+        // Sync to localStorage so download/print buttons work
+        try { localStorage.setItem('wh_uploaded_qr', __EMBEDDED_QR__); } catch (e) { }
+        return;
+      }
+      // 2. Fallback: localStorage (same device only)
+      var stored = localStorage.getItem('wh_uploaded_qr');
+      if (stored === 'assets/sole-arabic-qr-1780876330781.png') stored = '';
+      if (stored) {
+        displayUploadedQR(stored);
+        return;
+      }
+      // 3. Default embedded QR
+      displayUploadedQR(__DEFAULT_QR__);
+      // Sync to localStorage so download/print buttons work
+      try { localStorage.setItem('wh_uploaded_qr', __DEFAULT_QR__); } catch (e) { }
+    }
+
+    function generateQR() {
+      var url = document.getElementById('qr-url').value || 'menu.wellhealth.com';
+      var canvas = document.getElementById('qr-canvas');
+      if (typeof QRCode === 'undefined') return;
+      QRCode.toCanvas(canvas, url, {
+        width: 220,
+        margin: 2,
+        color: { dark: '#1a1a2e', light: '#ffffff' }
+      }, function (err) {
+        if (err) console.error('QR error:', err);
+      });
+    }
+
+    function downloadQR() {
+      var dataUrl = localStorage.getItem('wh_uploaded_qr');
+      if (dataUrl) {
+        var a = document.createElement('a');
+        a.download = 'well-health-qr.png';
+        a.href = dataUrl;
+        a.click();
+        return;
+      }
+      // Try static file
+      var preview = document.getElementById('qr-uploaded-preview');
+      if (preview && preview.src && !preview.classList.contains('hidden')) {
+        var a = document.createElement('a');
+        a.download = 'well-health-qr.png';
+        a.href = preview.src;
+        a.click();
+        return;
+      }
+      alert(isAR() ? 'يرجى رفع صورة QR أولاً.' : 'Please upload a QR Code image first.');
+    }
+
+    function printQR() {
+      var dataUrl = localStorage.getItem('wh_uploaded_qr');
+      if (!dataUrl) {
+        // Try static file
+        var preview = document.getElementById('qr-uploaded-preview');
+        if (preview && preview.src && !preview.classList.contains('hidden')) {
+          dataUrl = preview.src;
+        }
+      }
+      if (!dataUrl) {
+        alert(isAR() ? 'يرجى رفع صورة QR أولاً.' : 'Please upload a QR Code image first.');
+        return;
+      }
+      var subtitle = isAR() ? 'رمز QR المرفوع' : 'Uploaded QR Code';
+      var win = window.open('', '_blank');
+      win.document.write('<html><body style="text-align:center;padding:40px;"><img src="' + dataUrl + '" style="max-width:300px; border-radius:8px;" /><br/><p style="font-family:sans-serif;font-size:14px;color:#555;margin-top:12px;">' + subtitle + '</p></body></html>');
+      win.document.close();
+      win.focus();
+      setTimeout(function () { win.print(); }, 400);
+    }
+
+    // =============================================
+    // HEALTH GUIDELINES
+    // =============================================
+    function getGuidelines() {
+      try { return JSON.parse(localStorage.getItem('wh_guidelines') || '[]'); } catch (e) { return []; }
+    }
+    function saveGuidelines(guidelines) {
+      localStorage.setItem('wh_guidelines', JSON.stringify(guidelines));
+      syncCollection('/api/guidelines', guidelines);
+    }
+    function renderGuidelinesList() {
+      var guidelines = getGuidelines();
+      var list = document.getElementById('guidelines-list');
+      if (!guidelines.length) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;">لا توجد إرشادات بعد</div>';
+        return;
+      }
+      list.innerHTML = '<table><thead><tr><th data-ar="الرمز" data-en="Icon">الرمز</th><th data-ar="العنوان" data-en="Title">العنوان</th><th data-ar="الإجراءات" data-en="Actions">الإجراءات</th></tr></thead><tbody>' +
+        guidelines.map(function (g, i) {
+          return '<tr><td style="font-size:1.5rem;">' + (g.emoji || '•') + '</td><td>' + (isAR() ? g.titleAr : g.titleEn) + '</td><td style="display:flex;gap:6px;"><button class="btn btn-blue" style="padding:5px 10px;" onclick="editGuideline(' + i + ')"><span class="material-symbols-outlined" style="font-size:16px;">edit</span></button><button class="btn btn-red" style="padding:5px 10px;" onclick="deleteGuideline(' + i + ')"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button></td></tr>';
+        }).join('') +
+        '</tbody></table>';
+    }
+    function openGuidelineModal() {
+      document.getElementById('guideline-modal').classList.remove('hidden');
+      document.getElementById('guideline-modal').dataset.editIndex = '';
+      document.getElementById('guideline-emoji').value = '';
+      document.getElementById('guideline-title-en').value = '';
+      document.getElementById('guideline-title-ar').value = '';
+      document.getElementById('guideline-desc-en').value = '';
+      document.getElementById('guideline-desc-ar').value = '';
+    }
+    function closeGuidelineModal() {
+      document.getElementById('guideline-modal').classList.add('hidden');
+    }
+    function saveGuideline() {
+      var emoji = document.getElementById('guideline-emoji').value.trim();
+      var titleEn = document.getElementById('guideline-title-en').value.trim();
+      var titleAr = document.getElementById('guideline-title-ar').value.trim();
+      var descEn = document.getElementById('guideline-desc-en').value.trim();
+      var descAr = document.getElementById('guideline-desc-ar').value.trim();
+      if (!titleEn && !titleAr) { alert('أدخل العنوان'); return; }
+      var guidelines = getGuidelines();
+      var editIndex = document.getElementById('guideline-modal').dataset.editIndex;
+      var guideline = { emoji: emoji, titleEn: titleEn, titleAr: titleAr, descEn: descEn, descAr: descAr };
+      if (editIndex !== '') {
+        guidelines[parseInt(editIndex)] = guideline;
+      } else {
+        guidelines.push(guideline);
+      }
+      saveGuidelines(guidelines);
+      closeGuidelineModal();
+      renderGuidelinesList();
+      showToast(isAR() ? 'تم حفظ الإرشادة ✓' : 'Guideline saved ✓');
+    }
+    function editGuideline(idx) {
+      var guidelines = getGuidelines();
+      var g = guidelines[idx];
+      document.getElementById('guideline-modal').classList.remove('hidden');
+      document.getElementById('guideline-modal').dataset.editIndex = idx;
+      document.getElementById('guideline-emoji').value = g.emoji || '';
+      document.getElementById('guideline-title-en').value = g.titleEn || '';
+      document.getElementById('guideline-title-ar').value = g.titleAr || '';
+      document.getElementById('guideline-desc-en').value = g.descEn || '';
+      document.getElementById('guideline-desc-ar').value = g.descAr || '';
+    }
+    function deleteGuideline(idx) {
+      if (!confirm(isAR() ? 'حذف هذه الإرشادة؟' : 'Delete this guideline?')) return;
+      var guidelines = getGuidelines();
+      guidelines.splice(idx, 1);
+      saveGuidelines(guidelines);
+      renderGuidelinesList();
+      showToast(isAR() ? 'تم حذف الإرشادة' : 'Guideline deleted');
+    }
+
+    // =============================================
+    // ABOUT US
+    // =============================================
+    function saveAboutUs() {
+      var textEn = document.getElementById('about-text-en').value.trim();
+      var textAr = document.getElementById('about-text-ar').value.trim();
+      localStorage.setItem('wh_about_text_en', textEn);
+      localStorage.setItem('wh_about_text_ar', textAr);
+      syncSettings();
+      showToast(isAR() ? 'تم حفظ النص ✓' : 'About Us saved ✓');
+    }
+    function loadAboutUs() {
+      var textEn = localStorage.getItem('wh_about_text_en') || '';
+      var textAr = localStorage.getItem('wh_about_text_ar') || '';
+      if (document.getElementById('about-text-en')) document.getElementById('about-text-en').value = textEn;
+      if (document.getElementById('about-text-ar')) document.getElementById('about-text-ar').value = textAr;
+    }
+
+    // =============================================
+    // SOCIAL LINKS
+    // =============================================
+    function getSocialLinks() {
+      try { return JSON.parse(localStorage.getItem('wh_social_links') || '[]'); } catch (e) { return []; }
+    }
+    function saveSocialLinks(links) {
+      localStorage.setItem('wh_social_links', JSON.stringify(links));
+      syncCollection('/api/social-links', links);
+    }
+    function renderSocialLinksList() {
+      var links = getSocialLinks();
+      var list = document.getElementById('social-links-list');
+      if (!links.length) {
+        list.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;">لا توجد روابط بعد</div>';
+        return;
+      }
+      list.innerHTML = '<table><thead><tr><th data-ar="الرمز" data-en="Icon">الرمز</th><th data-ar="الاسم" data-en="Label">الاسم</th><th data-ar="الرابط" data-en="URL">الرابط</th><th data-ar="الإجراءات" data-en="Actions">الإجراءات</th></tr></thead><tbody>' +
+        links.map(function (l, i) {
+          return '<tr><td style="font-size:1.5rem;">' + (l.icon || '•') + '</td><td>' + (l.label || '') + '</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;"><small>' + (l.url || '') + '</small></td><td style="display:flex;gap:6px;"><button class="btn btn-blue" style="padding:5px 10px;" onclick="editSocialLink(' + i + ')"><span class="material-symbols-outlined" style="font-size:16px;">edit</span></button><button class="btn btn-red" style="padding:5px 10px;" onclick="deleteSocialLink(' + i + ')"><span class="material-symbols-outlined" style="font-size:16px;">delete</span></button></td></tr>';
+        }).join('') +
+        '</tbody></table>';
+    }
+    function openSocialLinkModal() {
+      document.getElementById('social-link-modal').classList.remove('hidden');
+      document.getElementById('social-link-modal').dataset.editIndex = '';
+      document.getElementById('social-link-label').value = '';
+      document.getElementById('social-link-url').value = '';
+      document.getElementById('social-link-icon').value = '';
+      document.getElementById('social-link-color').value = '';
+    }
+    function closeSocialLinkModal() {
+      document.getElementById('social-link-modal').classList.add('hidden');
+    }
+    function saveSocialLink() {
+      var label = document.getElementById('social-link-label').value.trim();
+      var url = document.getElementById('social-link-url').value.trim();
+      var icon = document.getElementById('social-link-icon').value.trim();
+      var color = document.getElementById('social-link-color').value.trim();
+      if (!label || !url) { alert('أدخل الاسم والرابط'); return; }
+      var links = getSocialLinks();
+      var editIndex = document.getElementById('social-link-modal').dataset.editIndex;
+      var link = { label: label, url: url, icon: icon, color: color };
+      if (editIndex !== '') {
+        links[parseInt(editIndex)] = link;
+      } else {
+        links.push(link);
+      }
+      saveSocialLinks(links);
+      closeSocialLinkModal();
+      renderSocialLinksList();
+      showToast(isAR() ? 'تم حفظ الرابط ✓' : 'Link saved ✓');
+    }
+    function editSocialLink(idx) {
+      var links = getSocialLinks();
+      var l = links[idx];
+      document.getElementById('social-link-modal').classList.remove('hidden');
+      document.getElementById('social-link-modal').dataset.editIndex = idx;
+      document.getElementById('social-link-label').value = l.label || '';
+      document.getElementById('social-link-url').value = l.url || '';
+      document.getElementById('social-link-icon').value = l.icon || '';
+      document.getElementById('social-link-color').value = l.color || '';
+    }
+    function deleteSocialLink(idx) {
+      if (!confirm(isAR() ? 'حذف هذا الرابط؟' : 'Delete this link?')) return;
+      var links = getSocialLinks();
+      links.splice(idx, 1);
+      saveSocialLinks(links);
+      renderSocialLinksList();
+      showToast(isAR() ? 'تم حذف الرابط' : 'Link deleted');
+    }
+    function saveBrandingSettings() {
+      // Save caption
+      var captionEn = document.getElementById('settings-caption-en').value.trim() || 'HEALTHY CHOICES HAPPY LIVES';
+      var captionAr = document.getElementById('settings-caption-ar').value.trim() || 'خيارات صحية، حياة سعيدة';
+      localStorage.setItem('wh_caption_en', captionEn);
+      localStorage.setItem('wh_caption_ar', captionAr);
+
+      // Save banner settings
+      var bannerEnabled = document.getElementById('settings-banner-enabled').checked;
+      var bannerText = document.getElementById('settings-banner-text').value.trim();
+      localStorage.setItem('wh_banner_enabled', bannerEnabled ? 'true' : 'false');
+      localStorage.setItem('wh_banner_text', bannerText);
+
+      var menuUrlEl = document.getElementById('settings-menu-url');
+      var appDownloadEl = document.getElementById('settings-app-download-enabled');
+      var androidAppUrlEl = document.getElementById('settings-android-app-url');
+      var iosAppUrlEl = document.getElementById('settings-ios-app-url');
+      localStorage.setItem('wh_menu_url', menuUrlEl ? menuUrlEl.value.trim() : '');
+      localStorage.setItem('wh_app_download_enabled', appDownloadEl && appDownloadEl.checked ? 'true' : 'false');
+      localStorage.setItem('wh_android_app_url', androidAppUrlEl ? androidAppUrlEl.value.trim() : '');
+      localStorage.setItem('wh_ios_app_url', iosAppUrlEl ? iosAppUrlEl.value.trim() : '');
+
+      // Handle logo upload
+      var logoInput = document.getElementById('settings-logo');
+      if (logoInput && logoInput.files && logoInput.files[0]) {
+        var logoFile = logoInput.files[0];
+        var logoReader = new FileReader();
+        logoReader.onload = function (e) {
+          try {
+            localStorage.setItem('wh_logo', e.target.result);
+            syncSettings();
+            showToast(isAR() ? 'تم حفظ الشعار ✓' : 'Logo saved ✓');
+          } catch (err) {
+            alert(isAR() ? 'حجم الصورة كبير جداً' : 'Image is too large');
+          }
+        };
+        logoReader.readAsDataURL(logoFile);
+      }
+
+      // Handle cover image upload
+      var coverInput = document.getElementById('settings-cover');
+      if (coverInput && coverInput.files && coverInput.files[0]) {
+        var coverFile = coverInput.files[0];
+        var coverReader = new FileReader();
+        coverReader.onload = function (e) {
+          try {
+            localStorage.setItem('wh_cover_image', e.target.result);
+            syncSettings();
+            showToast(isAR() ? 'تم حفظ صورة الغلاف ✓' : 'Cover image saved ✓');
+          } catch (err) {
+            alert(isAR() ? 'حجم الصورة كبير جداً' : 'Image is too large');
+          }
+        };
+        coverReader.readAsDataURL(coverFile);
+      }
+
+      // Show success only for caption and banner (since image uploads are async)
+      if (!logoInput.files.length && !coverInput.files.length) {
+        showToast(isAR() ? 'تم حفظ الإعدادات ✓' : 'Settings saved ✓');
+      }
+      syncSettings();
+    }
+
+    function saveRestaurantInfo() {
+      var name = document.getElementById('settings-name').value.trim();
+      var email = document.getElementById('settings-email').value.trim();
+      var settings = {};
+      try { settings = JSON.parse(localStorage.getItem('wh_settings') || '{}'); } catch (e) { settings = {}; }
+      settings.name = name;
+      settings.email = email;
+      localStorage.setItem('wh_settings', JSON.stringify(settings));
+      syncSettings();
+      showToast(isAR() ? 'تم حفظ البيانات ✓' : 'Info saved ✓');
+    }
+
+    function loadBrandingSettings() {
+      // Load captions
+      var captionEn = localStorage.getItem('wh_caption_en') || 'HEALTHY CHOICES HAPPY LIVES';
+      var captionAr = localStorage.getItem('wh_caption_ar') || 'خيارات صحية، حياة سعيدة';
+      if (document.getElementById('settings-caption-en')) {
+        document.getElementById('settings-caption-en').value = captionEn;
+      }
+      if (document.getElementById('settings-caption-ar')) {
+        document.getElementById('settings-caption-ar').value = captionAr;
+      }
+
+      // Load banner
+      var bannerEnabled = localStorage.getItem('wh_banner_enabled') === 'true';
+      var bannerText = localStorage.getItem('wh_banner_text') || '';
+      if (document.getElementById('settings-banner-enabled')) {
+        document.getElementById('settings-banner-enabled').checked = bannerEnabled;
+      }
+      if (document.getElementById('settings-banner-text')) {
+        document.getElementById('settings-banner-text').value = bannerText;
+      }
+
+      var menuUrl = localStorage.getItem('wh_menu_url') || '';
+      var appDownloadEnabled = localStorage.getItem('wh_app_download_enabled') !== 'false';
+      var androidAppUrl = localStorage.getItem('wh_android_app_url') || '';
+      var iosAppUrl = localStorage.getItem('wh_ios_app_url') || '';
+      if (document.getElementById('settings-menu-url')) {
+        document.getElementById('settings-menu-url').value = menuUrl;
+      }
+      if (document.getElementById('settings-app-download-enabled')) {
+        document.getElementById('settings-app-download-enabled').checked = appDownloadEnabled;
+      }
+      if (document.getElementById('settings-android-app-url')) {
+        document.getElementById('settings-android-app-url').value = androidAppUrl;
+      }
+      if (document.getElementById('settings-ios-app-url')) {
+        document.getElementById('settings-ios-app-url').value = iosAppUrl;
+      }
+
+      // Load logo preview
+      var logo = localStorage.getItem('wh_logo');
+      if (logo && document.getElementById('logo-preview')) {
+        document.getElementById('logo-preview').src = logo;
+        document.getElementById('logo-preview').style.display = 'block';
+      }
+
+      // Load cover preview
+      var cover = localStorage.getItem('wh_cover_image');
+      if (cover && document.getElementById('cover-preview')) {
+        document.getElementById('cover-preview').src = cover;
+        document.getElementById('cover-preview').style.display = 'block';
+      }
+    }
+
+    // =============================================
+    // SETTINGS
+    // =============================================
+    function saveSettings() {
+      saveBrandingSettings();
+      saveRestaurantInfo();
+    }
+
+    function loadSettings() {
+      loadBrandingSettings();
+      try {
+        var s = JSON.parse(localStorage.getItem('wh_settings') || '{}');
+        if (s.name && document.getElementById('settings-name')) document.getElementById('settings-name').value = s.name;
+        if (s.email && document.getElementById('settings-email')) document.getElementById('settings-email').value = s.email;
+      } catch (e) { }
+    }
+
+    // =============================================
+    // TOAST
+    // =============================================
+    function showToast(msg) {
+      var toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 2800);
+    }
+
+    // =============================================
+    // LOGOUT
+    // =============================================
+    function doLogout() {
+      sessionStorage.removeItem('wh_auth');
+      localStorage.removeItem('wh_auth');
+      window.location.replace('login.html');
+    }
+
+    // =============================================
+    // INIT
+    // =============================================
+    document.addEventListener('DOMContentLoaded', function () {
+      initLang();
+      updateDashboardStats();
+      renderRecentItems();
+      loadSettings();
+      loadBrandingSettings();
+      loadAboutUs();
+      renderGuidelinesList();
+      renderSocialLinksList();
+      loadUploadedQR();
+      loadRemoteData();
+    });
+  </script>
+</body>
+
+</html>

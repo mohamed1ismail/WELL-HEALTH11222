@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WELL HEALTH | الخدمات</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&amp;family=Playfair+Display:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@100..900&amp;family=Playfair+Display:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container-low": "#f5f3f0",
+                "on-secondary-fixed-variant": "#584400",
+                "secondary": "#755b00",
+                "primary": "#0f5238",
+                "on-surface": "#1b1c1a",
+                "on-secondary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "surface-bright": "#FAF6EE",
+                "error": "#ba1a1a",
+                "on-background": "#1b1c1a",
+                "on-tertiary-container": "#f7d1ca",
+                "on-error": "#ffffff",
+                "outline-variant": "#bfc9c1",
+                "primary-fixed-dim": "#95d4b3",
+                "on-primary-fixed-variant": "#0e5138",
+                "tertiary-container": "#755853",
+                "on-error-container": "#93000a",
+                "inverse-surface": "#30312f",
+                "on-secondary-fixed": "#241a00",
+                "nutri-carbs": "#A4AC86",
+                "inverse-on-surface": "#f2f0ed",
+                "tertiary-fixed-dim": "#e3beb8",
+                "surface": "#FAF6EE",
+                "on-primary": "#ffffff",
+                "inverse-primary": "#95d4b3",
+                "outline": "#707973",
+                "nutri-protein": "#F4C430",
+                "primary-fixed": "#b1f0ce",
+                "tertiary-fixed": "#ffdad4",
+                "surface-container-high": "#eae8e5",
+                "nutri-fats": "#BC6C25",
+                "on-tertiary-fixed-variant": "#5b403c",
+                "nutri-calories": "#2D6A4F",
+                "surface-container": "#efeeeb",
+                "secondary-container": "#fccc38",
+                "background": "#FAF6EE",
+                "tertiary": "#5b413c",
+                "surface-dim": "#dbdad7",
+                "surface-container-lowest": "#FAF6EE",
+                "on-primary-container": "#a8e7c5",
+                "secondary-fixed-dim": "#f0c12c",
+                "on-primary-fixed": "#002114",
+                "on-secondary-container": "#6f5600",
+                "primary-container": "#2d6a4f",
+                "surface-variant": "#e4e2df",
+                "surface-tint": "#2c694e",
+                "error-container": "#ffdad6",
+                "on-tertiary-fixed": "#2b1613",
+                "secondary-fixed": "#ffdf90",
+                "on-surface-variant": "#404943",
+                "surface-container-highest": "#e4e2df"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "section-gap": "80px",
+                "gutter": "24px",
+                "margin-desktop": "48px",
+                "margin-mobile": "16px",
+                "container-max": "1200px"
+        },
+        "fontFamily": {
+                "title-lg": ["Cairo"],
+                "body-md": ["Cairo"],
+                "label-caps": ["Cairo"],
+                "headline-md-mobile": ["Playfair Display"],
+                "arabic-headline": ["Cairo"],
+                "display-lg-mobile": ["Playfair Display"],
+                "headline-md": ["Playfair Display"],
+                "display-lg": ["Playfair Display"],
+                "body-lg": ["Cairo"]
+        },
+        "fontSize": {
+                "title-lg": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                "headline-md-mobile": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "arabic-headline": ["28px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+        }
+      },
+    },
+  }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Cairo', sans-serif; }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body[dir="rtl"] .lang-en { display: none !important; }
+        body[dir="ltr"] .lang-ar { display: none !important; }
+        #rating-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);align-items:center;justify-content:center}
+        #rating-modal.open{display:flex}
+        .star-btn{font-size:36px;cursor:pointer;transition:transform 0.15s ease,color 0.15s ease;color:#ddd;background:none;border:none;padding:4px}
+        .star-btn.lit{color:#F4C430}
+        .star-btn:hover{transform:scale(1.2)}
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar Navigation -->
+<header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 max-w-[1200px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-title-lg font-headline-md font-bold text-primary tracking-tight">
+<span class="lang-en">WELL HEALTH</span>
+<span class="lang-ar">ويل هيلث</span>
+</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="index.html">
+<span class="lang-en">Menu</span><span class="lang-ar">القائمة</span>
+</a>
+<a class="text-primary font-bold border-b-2 border-primary font-body-md text-body-md" href="services.html">
+<span class="lang-en">Services</span><span class="lang-ar">الخدمات</span>
+</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button onclick="toggleLanguage()" class="text-label-caps font-label-caps px-3 py-1 rounded-full bg-primary text-on-primary cursor-pointer hover:opacity-90 transition-opacity">
+    <span id="lang-text">EN</span>
+</button>
+<a href="login.html"><span class="material-symbols-outlined text-primary scale-95 active:scale-100 transition-transform cursor-pointer" data-icon="account_circle">account_circle</span></a>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-section-gap">
+<!-- Hero Header -->
+<section class="max-w-container-max mx-auto px-gutter text-center mb-16">
+<h1 class="font-headline-md text-primary mb-4 text-[40px] font-bold">
+<span class="lang-ar">خدماتنا المميزة</span>
+<span class="lang-en">Our Services</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">
+<span class="lang-ar">نقدم لكم مجموعة متكاملة من الخدمات لتجربة أكل صحي لا تُنسى، صممت بعناية لتلبي كافة احتياجاتكم الغذائية بلمسة احترافية.</span>
+<span class="lang-en">We offer a complete range of services for an unforgettable healthy dining experience, designed to meet all your nutritional needs.</span>
+</p>
+</section>
+<!-- Services Grid -->
+<section class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Service 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl" data-icon="local_shipping">local_shipping</span>
+</div>
+<span class="bg-nutri-protein/20 text-on-secondary-fixed-variant text-label-caps px-3 py-1 rounded-full font-bold">الأكثر طلباً</span>
+</div>
+<h3 class="font-title-lg text-primary mb-2">🚚 خدمة التوصيل</h3>
+<p class="font-body-md text-on-surface-variant">توصيل مجاني للطلبات فوق 150 ج، نصلك أينما كنت بأسرع وقت وبأعلى معايير الجودة.</p>
+</div>
+<!-- Service 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl" data-icon="event_available">event_available</span>
+</div>
+<span class="bg-nutri-protein/20 text-on-secondary-fixed-variant text-label-caps px-3 py-1 rounded-full font-bold">حجز سريع</span>
+</div>
+<h3 class="font-title-lg text-primary mb-2">📋 الحجوزات والمناسبات</h3>
+<p class="font-body-md text-on-surface-variant">تواصل معنا للاستفسار عن حجز طاولتكم المفضلة أو تنظيم مناسبتكم الخاصة في أجواء هادئة.</p>
+</div>
+<!-- Service 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl" data-icon="restaurant_menu">restaurant_menu</span>
+</div>
+<span class="bg-nutri-protein/20 text-on-secondary-fixed-variant text-label-caps px-3 py-1 rounded-full font-bold">جودة عالية</span>
+</div>
+<h3 class="font-title-lg text-primary mb-2">👨‍🍳 طبخ خاص</h3>
+<p class="font-body-md text-on-surface-variant">خبراء تغذية معتمدون يشرفون على تحضير وجباتكم المختارة بلمسات إبداعية وصحية تماماً.</p>
+</div>
+<!-- Service 4 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl" data-icon="celebration">celebration</span>
+</div>
+<span class="bg-nutri-protein/20 text-on-secondary-fixed-variant text-label-caps px-3 py-1 rounded-full font-bold">مساحات واسعة</span>
+</div>
+<h3 class="font-title-lg text-primary mb-2">🎉 حفلات ومؤتمرات</h3>
+<p class="font-body-md text-on-surface-variant">من 10 إلى 500 شخص، نجهز لكم القاعة بأحدث التجهيزات مع قائمة طعام مخصصة لمناسباتكم.</p>
+</div>
+<!-- Service 5 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl" data-icon="assignment">assignment</span>
+</div>
+<span class="bg-nutri-protein/20 text-on-secondary-fixed-variant text-label-caps px-3 py-1 rounded-full font-bold">استشارة</span>
+</div>
+<h3 class="font-title-lg text-primary mb-2">📊 خطط غذائية</h3>
+<p class="font-body-md text-on-surface-variant">مع متخصص تغذية، نصمم لك برنامجاً غذائياً متوازناً يتناسب مع أهدافك الصحية ونمط حياتك.</p>
+</div>
+<!-- Service 6 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl" data-icon="redeem">redeem</span>
+</div>
+<span class="bg-nutri-protein/20 text-on-secondary-fixed-variant text-label-caps px-3 py-1 rounded-full font-bold">عرض محدود</span>
+</div>
+<h3 class="font-title-lg text-primary mb-2">🎁 عروض وخصومات</h3>
+<p class="font-body-md text-on-surface-variant">خصم 20% على الطلب الأول لمستخدمي تطبيقنا الجدد، استمتع بمذاقنا الرائع بسعر لا يقاوم.</p>
+</div>
+</section>
+<!-- CTA Banner -->
+<section class="mt-section-gap max-w-container-max mx-auto px-gutter">
+<div class="relative overflow-hidden bg-primary-container rounded-2xl p-12 text-center text-white flex flex-col items-center gap-6 shadow-xl">
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+<div class="bg-nutri-protein text-primary-fixed-dim p-4 rounded-full flex items-center justify-center shadow-lg transform hover:rotate-12 transition-transform">
+<span class="material-symbols-outlined text-4xl" data-icon="eco" data-weight="fill" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="max-w-2xl">
+<h2 class="text-display-lg-mobile md:text-display-lg font-bold mb-4">
+<span class="lang-ar">هل لديك مناسبة خاصة؟</span>
+<span class="lang-en">Have a Special Occasion?</span>
+</h2>
+<p class="text-body-lg text-primary-fixed/80">
+<span class="lang-ar">تواصل معنا وسنساعدك في اختيار القائمة الصحية المثالية لمناسبتك.</span>
+<span class="lang-en">Contact us and we'll help you choose the perfect healthy menu for your occasion.</span>
+</p>
+</div>
+<a href="https://api.whatsapp.com/send?phone=966549555157" target="_blank" class="bg-nutri-protein hover:bg-secondary-container text-on-primary-fixed font-bold py-4 px-10 rounded-lg flex items-center gap-3 transition-all duration-200 active:scale-95 shadow-md group">
+<span class="lang-ar">تواصل معنا الآن 👥</span>
+<span class="lang-en">Contact Us Now 👥</span>
+<span class="material-symbols-outlined group-hover:translate-x-[-4px] transition-transform">arrow_back</span>
+</a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-10 px-6 bg-[#1b1c1a] text-white border-t border-white/10">
+<div class="max-w-container-max mx-auto flex flex-col items-center gap-6">
+  <div class="flex flex-wrap justify-center gap-4">
+    <a href="https://www.instagram.com/well.health_sa?igsh=MjBjMmU3NnpmNDFl" target="_blank" aria-label="إنستغرام" title="إنستغرام" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:text-[#F4C430] hover:scale-110 transition-all duration-200">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@well_health_sa?_r=1&_t=ZS-96qJl7ta3Dk" target="_blank" aria-label="تيك توك" title="تيك توك" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:text-[#F4C430] hover:scale-110 transition-all duration-200">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9a8.27 8.27 0 004.84 1.55V7.12a4.85 4.85 0 01-1.07-.43z"/></svg>
+    </a>
+    <a href="https://www.snapchat.com/add/wellhealth.ksa?share_id=dYsubJC-m0w&locale=ar-SA-u-nu-arab" target="_blank" aria-label="سناب شات" title="سناب شات" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:text-[#F4C430] hover:scale-110 transition-all duration-200">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.333 4.225l-.005.044c-.036.64.17 1.084.685 1.406.485.297 1.009.435 1.447.573.126.04.243.077.342.115.851.302 1.314.7 1.23 1.28a.482.482 0 01-.439.401c-.65.084-1.079.31-1.45.685-.135.138-.264.303-.404.484-.413.533-.927 1.198-2.048 1.198-.28 0-.569-.055-.862-.11-.383-.075-.776-.151-1.19-.015-.47.152-.93.512-1.41.887-.71.554-1.512 1.183-2.705 1.183h-.048c-1.193 0-1.994-.629-2.706-1.183-.479-.375-.94-.735-1.41-.887-.413-.136-.806-.06-1.19.015-.292.055-.582.11-.862.11-1.12 0-1.634-.665-2.047-1.198-.14-.181-.269-.346-.404-.484-.37-.375-.8-.601-1.45-.685a.482.482 0 01-.44-.4c-.083-.58.38-.978 1.23-1.28.1-.04.217-.076.342-.115.439-.138.962-.276 1.447-.573.515-.322.721-.767.685-1.406l-.005-.044c-.07-1.006-.196-3.032.333-4.225C7.859 1.069 11.216.793 12.206.793z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/share/1GHaPj3Cqr/" target="_blank" aria-label="فيسبوك" title="فيسبوك" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:text-[#F4C430] hover:scale-110 transition-all duration-200">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://api.whatsapp.com/send?phone=966549555157" target="_blank" aria-label="واتساب" title="واتساب" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:text-[#F4C430] hover:scale-110 transition-all duration-200">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <a href="https://share.google/9B6OvSslfscD6SJKo" target="_blank" aria-label="الموقع الإلكتروني" title="الموقع الإلكتروني" class="w-11 h-11 flex items-center justify-center rounded-full bg-white/10 text-white hover:text-[#F4C430] hover:scale-110 transition-all duration-200">
+      <span class="material-symbols-outlined text-[22px]">language</span>
+    </a>
+  </div>
+  <div class="flex flex-col md:flex-row justify-between items-center w-full gap-3 pt-4 border-t border-white/10">
+    <div>
+      <span class="font-bold text-[#4CAF50] text-lg">WELL HEALTH — ويل هيلث</span>
+      <p class="text-white/50 text-xs mt-1">© 2024 WELL HEALTH. All rights reserved.</p>
+    </div>
+    <div class="flex gap-4 items-center flex-wrap justify-center">
+      <a href="tel:+966549555157" class="text-white/60 hover:text-[#4CAF50] text-xs transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">call</span> 0549555157
+      </a>
+      <button onclick="openRatingModal()" class="text-[#F4C430] hover:text-white text-xs font-bold transition-colors flex items-center gap-1">
+        <span class="lang-en">⭐ Rate Us</span>
+        <span class="lang-ar">⭐ قيّمنا</span>
+      </button>
+    </div>
+  </div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and subtle scroll effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.bg-surface-container-lowest');
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+                observer.observe(card);
+            });
+        });
+    </script>
+<script>
+    let currentLang = localStorage.getItem('lang') || 'ar';
+
+    function applyLanguage(lang) {
+        const body = document.body;
+        const html = document.documentElement;
+        const langText = document.getElementById('lang-text');
+        if (lang === 'ar') {
+            body.setAttribute('dir', 'rtl');
+            html.setAttribute('lang', 'ar');
+            if (langText) langText.innerText = 'AR';
+            currentLang = 'ar';
+        } else {
+            body.setAttribute('dir', 'ltr');
+            html.setAttribute('lang', 'en');
+            if (langText) langText.innerText = 'EN';
+            currentLang = 'en';
+        }
+        localStorage.setItem('lang', lang);
+    }
+
+    function toggleLanguage() {
+        applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+    }
+
+    applyLanguage(currentLang);
+</script>
+
+<!-- ===== RATING MODAL ===== -->
+<div id="rating-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-sm w-full text-center">
+    <h3 id="modal-title" class="font-bold text-xl text-on-background mb-2">
+      <span class="lang-en">How was your experience?</span>
+      <span class="lang-ar">كيف كانت تجربتك؟</span>
+    </h3>
+    <p class="text-sm text-on-surface-variant mb-6">
+      <span class="lang-en">Tap a star to rate us</span>
+      <span class="lang-ar">اضغط على نجمة لتقييمنا</span>
+    </p>
+    <div id="star-row" class="flex justify-center gap-1 mb-6">
+      <button class="star-btn" data-star="1" onclick="selectStar(1)" onmouseenter="hoverStar(1)" onmouseleave="resetStarHover()">★</button>
+      <button class="star-btn" data-star="2" onclick="selectStar(2)" onmouseenter="hoverStar(2)" onmouseleave="resetStarHover()">★</button>
+      <button class="star-btn" data-star="3" onclick="selectStar(3)" onmouseenter="hoverStar(3)" onmouseleave="resetStarHover()">★</button>
+      <button class="star-btn" data-star="4" onclick="selectStar(4)" onmouseenter="hoverStar(4)" onmouseleave="resetStarHover()">★</button>
+      <button class="star-btn" data-star="5" onclick="selectStar(5)" onmouseenter="hoverStar(5)" onmouseleave="resetStarHover()">★</button>
+    </div>
+    <div id="modal-feedback" class="text-sm text-primary font-bold min-h-[20px] mb-4"></div>
+    <button onclick="closeRatingModal()" class="text-on-surface-variant hover:text-primary text-sm underline">
+      <span class="lang-en">Close</span><span class="lang-ar">إغلاق</span>
+    </button>
+  </div>
+</div>
+
+<script>
+let selectedStarVal = 0;
+function openRatingModal() {
+  const modal = document.getElementById('rating-modal');
+  modal.classList.add('open');
+  selectedStarVal = 0;
+  document.getElementById('modal-feedback').textContent = '';
+  resetStarHover();
+}
+
+function closeRatingModal() {
+  document.getElementById('rating-modal').classList.remove('open');
+}
+
+document.getElementById('rating-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeRatingModal();
+});
+
+function hoverStar(n) {
+  document.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('lit', i < n);
+  });
+}
+
+function resetStarHover() {
+  document.querySelectorAll('.star-btn').forEach((btn, i) => {
+    btn.classList.toggle('lit', i < selectedStarVal);
+  });
+}
+
+function selectStar(n) {
+  selectedStarVal = n;
+  hoverStar(n);
+  const feedback = document.getElementById('modal-feedback');
+
+  // Save all ratings internally in wh_ratings list (internal database/sheet)
+  const ratings = JSON.parse(localStorage.getItem('wh_ratings') || '[]');
+  ratings.push({stars: n, timestamp: new Date().toISOString()});
+  localStorage.setItem('wh_ratings', JSON.stringify(ratings));
+
+  if (n <= 3) {
+    feedback.textContent = currentLang === 'ar'
+      ? 'شكراً! سنتواصل معك قريباً 🙏'
+      : "Thank you! We'll follow up soon 🙏";
+    setTimeout(() => closeRatingModal(), 2500);
+  } else {
+    feedback.textContent = currentLang === 'ar'
+      ? 'شكراً لك! جاري توجيهك لتقييمنا على جوجل...'
+      : 'Thank you! Redirecting you to Google reviews...';
+    setTimeout(() => {
+      window.open('https://www.google.com/search?q=well+health', '_blank');
+      closeRatingModal();
+    }, 1500);
+  }
+}
+</script>
+</body></html>

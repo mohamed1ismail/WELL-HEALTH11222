@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>WELL HEALTH - Item Detail</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Cairo:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#4CAF50", "on-primary": "#ffffff", "primary-container": "#388e3c",
+            "surface": "#FAF6EE", "surface-bright": "#FAF6EE", "surface-container": "#FAF6EE",
+            "surface-container-lowest": "#FAF6EE", "surface-container-low": "#FAF6EE",
+            "on-surface": "#1b1c1a", "on-surface-variant": "#404943",
+            "outline": "#707973", "outline-variant": "#bfc9c1",
+            "error": "#ba1a1a", "background": "#FAF6EE", "on-background": "#1b1c1a",
+            "nutri-fats": "#BC6C25", "nutri-carbs": "#A4AC86", "nutri-protein": "#4CAF50", "nutri-calories": "#4CAF50"
+          },
+          fontFamily: {
+            "headline-md": ["Playfair Display"], "body-lg": ["Cairo"], "headline-md-mobile": ["Playfair Display"],
+            "arabic-headline": ["Cairo"], "title-lg": ["Cairo"], "body-md": ["Cairo"], "label-caps": ["Cairo"]
+          },
+          fontSize: {
+            "headline-md": ["32px", { lineHeight: "1.3", fontWeight: "600" }],
+            "headline-md-mobile": ["24px", { lineHeight: "1.3", fontWeight: "600" }],
+            "arabic-headline": ["28px", { lineHeight: "1.4", fontWeight: "700" }],
+            "title-lg": ["20px", { lineHeight: "1.4", fontWeight: "700" }],
+            "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "700" }]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass-header {
+      backdrop-filter: blur(12px);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .nutri-card {
+      transition: all 0.3s ease;
+    }
+
+    .nutri-card:hover {
+      transform: translateY(-4px);
+    }
+
+    body[dir="rtl"] .lang-en {
+      display: none !important;
+    }
+
+    body[dir="ltr"] .lang-ar {
+      display: none !important;
+    }
+
+    body[dir="rtl"] {
+      font-family: 'Cairo', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-black/40 font-body-md text-on-surface">
+  <script>
+      (function () {
+        const lang = localStorage.getItem('lang') || 'en';
+        if (lang === 'ar') {
+          document.body.setAttribute('dir', 'rtl');
+          document.documentElement.setAttribute('lang', 'ar');
+        }
+      })();
+  </script>
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <main
+      class="animate-slide-up relative w-full max-w-4xl max-h-[90vh] bg-surface overflow-hidden rounded-xl shadow-2xl flex flex-col md:flex-row">
+      <button
+        class="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/20 glass-header text-white hover:bg-white/40 transition-colors"
+        onclick="history.back()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <!-- Image -->
+      <div id="img-wrap"
+        class="relative w-full md:w-1/2 h-64 md:h-auto flex-shrink-0 overflow-hidden bg-surface-container flex items-center justify-center">
+        <img id="item-img" alt="" class="transition-transform duration-700 hover:scale-105 object-contain" src="" />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:bg-gradient-to-r pointer-events-none">
+        </div>
+        <div id="discount-badge"
+          class="absolute top-4 left-4 hidden bg-red-500 text-white px-3 py-1 rounded-full font-bold text-sm"></div>
+      </div>
+      <!-- Content -->
+      <div class="w-full md:w-1/2 flex flex-col flex-1 min-h-0 bg-surface-bright">
+        <div class="flex-1 p-8 md:p-10 space-y-6 overflow-y-auto">
+          <header class="space-y-2">
+            <span class="font-label-caps text-label-caps text-primary tracking-widest uppercase">
+              <span class="lang-en">Signature Entree</span>
+              <span class="lang-ar">طبق مميز</span>
+            </span>
+            <h1 id="item-title" class="font-headline-md text-headline-md text-on-background leading-tight"></h1>
+          </header>
+          <section>
+            <p id="item-desc" class="font-body-md text-body-md text-on-surface-variant leading-relaxed"></p>
+          </section>
+          <!-- Nutrition -->
+          <section class="grid grid-cols-4 gap-3 p-4 bg-surface-container rounded-lg">
+            <div class="nutri-card flex flex-col items-center p-2 border-l-4 border-primary">
+              <span class="material-symbols-outlined mb-1 text-primary text-[20px]">local_fire_department</span>
+              <span id="n-cal" class="font-title-lg text-title-lg leading-tight">—</span>
+              <span class="text-[10px] text-outline lang-en">kcal</span>
+              <span class="text-[10px] text-outline lang-ar">سعرة</span>
+            </div>
+            <div class="nutri-card flex flex-col items-center p-2 border-l-4 border-primary">
+              <span class="material-symbols-outlined mb-1 text-primary text-[20px]">fitness_center</span>
+              <span id="n-pro" class="font-title-lg text-title-lg leading-tight">—</span>
+              <span class="text-[10px] text-outline lang-en">Protein</span>
+              <span class="text-[10px] text-outline lang-ar">بروتين</span>
+            </div>
+            <div class="nutri-card flex flex-col items-center p-2 border-l-4 border-primary">
+              <span class="material-symbols-outlined mb-1 text-primary text-[20px]">bakery_dining</span>
+              <span id="n-carb" class="font-title-lg text-title-lg leading-tight">—</span>
+              <span class="text-[10px] text-outline lang-en">Carbs</span>
+              <span class="text-[10px] text-outline lang-ar">كربوهيدرات</span>
+            </div>
+            <div class="nutri-card flex flex-col items-center p-2 border-l-4 border-primary">
+              <span class="material-symbols-outlined mb-1 text-primary text-[20px]">opacity</span>
+              <span id="n-fat" class="font-title-lg text-title-lg leading-tight">—</span>
+              <span class="text-[10px] text-outline lang-en">Fats</span>
+              <span class="text-[10px] text-outline lang-ar">دهون</span>
+            </div>
+          </section>
+          <!-- Sizes -->
+          <section class="space-y-3">
+            <div class="flex justify-between items-center">
+              <h3 class="font-label-caps text-label-caps text-on-surface-variant">
+                <span class="lang-en">SELECT SIZE</span>
+                <span class="lang-ar">اختر الحجم</span>
+              </h3>
+              <div class="flex items-center gap-3">
+                <div id="price-info" class="flex flex-col items-end gap-1">
+                  <span id="price-display"
+                    class="font-headline-md text-headline-md-mobile text-primary font-bold"></span>
+                  <span id="original-price" class="text-sm text-on-surface-variant line-through hidden"></span>
+                </div>
+              </div>
+            </div>
+            <div id="size-btns" class="flex gap-3"></div>
+          </section>
+        </div>
+        <footer
+          class="p-6 md:p-8 bg-surface-bright border-t border-outline-variant flex gap-4 sticky bottom-0 z-20 justify-center">
+          <button
+            class="w-full max-w-md border-2 border-primary text-primary py-4 rounded-lg hover:bg-primary/5 transition-all flex items-center justify-center gap-2 font-bold">
+            <span class="material-symbols-outlined">favorite</span>
+            <span class="lang-en">Add to Favorites</span>
+            <span class="lang-ar">أضف إلى المفضلة</span>
+          </button>
+        </footer>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const lang = localStorage.getItem('lang') || 'en';
+      const itemId = localStorage.getItem('wh_current_item');
+      const API_BASE = window.location.origin.indexOf('file:') === 0 ? 'http://localhost:5000' : '';
+      try {
+        const remoteItems = await fetch(API_BASE + '/api/items').then(r => r.ok ? r.json() : []);
+        if (remoteItems && remoteItems.length) localStorage.setItem('wh_items', JSON.stringify(remoteItems));
+      } catch (err) {
+        console.error(err);
+      }
+      const items = JSON.parse(localStorage.getItem('wh_items') || '[]');
+      const item = itemId ? items.find(i => String(i.id) === String(itemId)) : null;
+
+      if (!item) {
+        // No item in storage — show placeholder
+        document.getElementById('item-title').textContent = lang === 'ar' ? 'طبق مميز' : 'Menu Item';
+        document.getElementById('item-desc').textContent = lang === 'ar' ? 'تفاصيل الطبق' : 'Item details';
+        document.getElementById('img-wrap').innerHTML = '<div class="w-full h-full flex items-center justify-center text-8xl bg-surface-container">🍽️</div>';
+        return;
+      }
+
+      // Image with size support
+      const img = document.getElementById('item-img');
+      const imageSize = item.imageSize || 'medium'; // small: 80px, medium: 120px, large: 160px
+      const imageSizeMap = { small: '80px', medium: '120px', large: '160px' };
+      img.style.width = imageSizeMap[imageSize];
+      img.style.height = imageSizeMap[imageSize];
+
+      if (item.img) {
+        img.src = item.img;
+        img.alt = lang === 'ar' ? item.nameAr : item.nameEn;
+      } else {
+        document.getElementById('img-wrap').innerHTML = '<div class="w-full h-full flex items-center justify-center text-8xl bg-surface-container">🍽️</div>';
+      }
+
+      // Title & desc
+      document.getElementById('item-title').textContent = lang === 'ar' ? (item.nameAr || item.nameEn || '') : (item.nameEn || item.nameAr || '');
+      document.getElementById('item-desc').textContent = lang === 'ar' ? (item.descAr || item.descEn || '') : (item.descEn || item.descAr || '');
+
+      // Nutrition
+      if (item.cal) document.getElementById('n-cal').textContent = item.cal;
+      if (item.protein) document.getElementById('n-pro').textContent = item.protein + 'g';
+      if (item.carbs) document.getElementById('n-carb').textContent = item.carbs + 'g';
+      if (item.fats) document.getElementById('n-fat').textContent = item.fats + 'g';
+
+      // Sizes — support both new portions[] and old priceSm/Md/Lg
+      let sizeData = [];
+      if (item.portions && item.portions.length > 0) {
+        sizeData = item.portions.filter(p => p.label || p.price);
+      } else {
+        sizeData = [
+          { label: lang === 'ar' ? 'صغير' : 'Small', price: item.priceSm },
+          { label: lang === 'ar' ? 'وسط' : 'Medium', price: item.priceMd || item.price },
+          { label: lang === 'ar' ? 'كبير' : 'Large', price: item.priceLg }
+        ].filter(s => s.price && s.price !== '0' && s.price !== '');
+      }
+
+      function getDiscountResult(originalPrice) {
+        const base = parseFloat(originalPrice);
+        const discountValue = parseFloat(item.discountValue);
+        if (!base || base <= 0 || !discountValue || discountValue <= 0 || !item.discountType || item.discountType === 'none') return null;
+        const percent = item.discountType === 'percentage' ? discountValue : (discountValue / base) * 100;
+        const finalPrice = item.discountType === 'percentage' ? base * (100 - discountValue) / 100 : base - discountValue;
+        return {
+          percent: Math.max(Math.min(percent, 100), 0),
+          finalPrice: Math.max(finalPrice, 0)
+        };
+      }
+
+      // Calculate discount and apply to first price
+      function calculateFinalPrice(originalPrice) {
+        const discountResult = getDiscountResult(originalPrice);
+        if (!discountResult) return parseFloat(originalPrice);
+        return discountResult.finalPrice.toFixed(discountResult.finalPrice % 1 ? 2 : 0);
+      }
+
+      const priceDisplay = document.getElementById('price-display');
+      const originalPriceDisplay = document.getElementById('original-price');
+      const sizeBtnsEl = document.getElementById('size-btns');
+      const discountBadge = document.getElementById('discount-badge');
+
+      // Show discount badge if applicable
+      if (item.discountValue && item.discountValue > 0) {
+        let badgeText = '';
+        if (item.discountType === 'percentage') {
+          badgeText = '-' + item.discountValue + '%';
+        } else if (item.discountType === 'fixed') {
+          badgeText = '-' + item.discountValue + ' ر.س';
+        }
+        if (badgeText) {
+          discountBadge.textContent = badgeText;
+          discountBadge.classList.remove('hidden');
+        }
+      }
+
+      const firstDiscountResult = sizeData.length > 0 ? getDiscountResult(sizeData[0].price) : getDiscountResult(item.price);
+      if (firstDiscountResult) {
+        const percent = firstDiscountResult.percent.toFixed(firstDiscountResult.percent % 1 ? 1 : 0);
+        discountBadge.textContent = '-' + percent + '%';
+        discountBadge.classList.remove('hidden');
+      }
+
+      if (sizeData.length > 0) {
+        const firstPrice = sizeData[0].price;
+        const finalPrice = calculateFinalPrice(firstPrice);
+        priceDisplay.textContent = finalPrice + ' ر.س';
+
+        // Show original price if discounted
+        if (item.discountValue && item.discountValue > 0) {
+          originalPriceDisplay.textContent = firstPrice + ' ر.س';
+          originalPriceDisplay.classList.remove('hidden');
+        }
+
+        sizeBtnsEl.innerHTML = sizeData.map((s, i) => {
+          const finalPrice = calculateFinalPrice(s.price);
+          return `
+      <button class="size-btn flex-1 py-3 rounded-lg border-2 font-label-caps text-label-caps transition-all
+        ${i === 0 ? 'bg-primary text-white border-primary' : 'border-outline-variant hover:border-primary'}"
+        onclick="selectSize('${finalPrice}', '${s.price}', this)">
+        ${s.label}
+      </button>`;
+        }).join('');
+      } else if (item.price) {
+        const finalPrice = calculateFinalPrice(item.price);
+        priceDisplay.textContent = finalPrice + ' ر.س';
+        if (item.discountValue && item.discountValue > 0) {
+          originalPriceDisplay.textContent = item.price + ' ر.س';
+          originalPriceDisplay.classList.remove('hidden');
+        }
+      }
+    });
+
+    function selectSize(finalPrice, originalPrice, btn) {
+      const priceDisplay = document.getElementById('price-display');
+      const originalPriceDisplay = document.getElementById('original-price');
+
+      priceDisplay.textContent = finalPrice + ' ر.س';
+
+      // Show original if discounted
+      if (originalPrice !== finalPrice) {
+        originalPriceDisplay.textContent = originalPrice + ' ر.س';
+        originalPriceDisplay.classList.remove('hidden');
+      } else {
+        originalPriceDisplay.classList.add('hidden');
+      }
+
+      document.querySelectorAll('.size-btn').forEach(b => {
+        b.classList.remove('bg-primary', 'text-white', 'border-primary');
+        b.classList.add('border-outline-variant');
+      });
+      btn.classList.remove('border-outline-variant');
+      btn.classList.add('bg-primary', 'text-white', 'border-primary');
+      btn.style.transform = 'scale(0.95)';
+      setTimeout(() => btn.style.transform = 'scale(1)', 100);
+    }
+  </script>
+</body>
+
+</html>

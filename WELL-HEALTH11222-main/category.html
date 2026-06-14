@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WELL HEALTH | القائمة</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  * { font-family: 'Cairo', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body[dir="rtl"] .lang-en { display: none !important; }
+  body[dir="ltr"] .lang-ar { display: none !important; }
+  /* Category card active */
+  .cat-card { transition: all 0.2s ease; cursor: pointer; }
+  .cat-card.active .cat-img-wrap { border: 3px solid #4CAF50; }
+  .cat-card.active .cat-name { color: #4CAF50; font-weight: 900; }
+  .cat-card.active .cat-underline { background: #4CAF50; }
+  /* Item card */
+  .item-card { transition: all 0.25s ease; }
+  .item-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(76,175,80,0.13); }
+  /* Scrollbar hide */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Glass nav */
+  .glass-nav { background: rgba(251,249,246,0.93); backdrop-filter: blur(12px); }
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
+</head>
+<body class="bg-[#f8faf8] text-[#1b1c1a] min-h-screen">
+<script>
+(function() {
+  const lang = localStorage.getItem('lang') || 'ar';
+  if (lang === 'en') {
+    document.documentElement.setAttribute('dir','ltr');
+    document.documentElement.setAttribute('lang','en');
+  }
+})();
+</script>
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 glass-nav shadow-sm border-b border-gray-100">
+  <div class="flex items-center justify-between px-4 py-3 max-w-[1200px] mx-auto">
+    <div class="flex items-center gap-2">
+      <button onclick="window.location.href='index.html'"
+        class="p-1.5 rounded-full hover:bg-green-50 transition-colors">
+        <span class="material-symbols-outlined text-[#4CAF50] text-[22px]">arrow_back</span>
+      </button>
+      <span class="font-black text-[#4CAF50] text-lg">
+        <span class="lang-ar">ويل هيلث</span>
+        <span class="lang-en">WELL HEALTH</span>
+      </span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleLanguage()" class="bg-[#4CAF50] text-white text-xs font-bold px-3 py-1.5 rounded-full">
+        <span id="lang-text">AR</span>
+      </button>
+      <a href="login.html" class="text-[#4CAF50]">
+        <span class="material-symbols-outlined text-[24px]">account_circle</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE TITLE -->
+<div class="pt-[64px] pb-2 text-center">
+  <p class="text-xs text-gray-400 mt-3 font-semibold lang-ar">اختر من أشهر الأطباق</p>
+  <p class="text-xs text-gray-400 mt-3 font-semibold lang-en">Choose from our top dishes</p>
+</div>
+
+<!-- CATEGORY HORIZONTAL SCROLL -->
+<div class="sticky top-[56px] z-40 bg-[#f8faf8]/95 backdrop-blur-sm pt-3 pb-0">
+  <div id="cat-tabs" class="no-scrollbar flex gap-4 overflow-x-auto px-4 pb-0 justify-start"></div>
+  <!-- Thin separator line -->
+  <div class="h-px bg-gray-200 mt-3"></div>
+</div>
+
+<!-- ITEMS GRID -->
+<main class="max-w-[1200px] mx-auto px-4 pt-6 pb-24">
+  <div class="flex items-center justify-between mb-5 px-1">
+    <h2 id="cat-title" class="text-xl font-black text-[#1b1c1a]"></h2>
+    <span id="item-count" class="text-sm text-gray-400 font-semibold"></span>
+  </div>
+  <div id="items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-[#1b1c1a] text-white py-8 px-4 text-center">
+  <p class="font-black text-[#4CAF50] text-lg mb-1">
+    <span class="lang-ar">ويل هيلث</span>
+    <span class="lang-en">WELL HEALTH</span>
+  </p>
+  <p class="text-white/50 text-xs mb-4">© 2024 WELL HEALTH</p>
+  <div class="flex justify-center gap-3 flex-wrap">
+    <a href="https://www.instagram.com/well.health_sa?igsh=MjBjMmU3NnpmNDFl" target="_blank"
+       class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#4CAF50] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@well_health_sa?_r=1&_t=ZS-96qJl7ta3Dk" target="_blank"
+       class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#4CAF50] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9a8.27 8.27 0 004.84 1.55V7.12a4.85 4.85 0 01-1.07-.43z"/></svg>
+    </a>
+    <a href="https://api.whatsapp.com/send?phone=966549555157" target="_blank"
+       class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#4CAF50] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+let currentLang = localStorage.getItem('lang') || 'ar';
+
+const CATS = {
+  all:        { ar:'الكل',         en:'All',        emoji:'🍽️', img:'' },
+  grill:      { ar:'المشويات',     en:'Grills',     emoji:'🔥', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuAuxoBdzU97kF_yx9SlgJAj4sAOI6RvhFTVzs8QKFLgYinjGHE5kQApbcI2I5IfbYd9yy9nFablU1JKUnnbWty5Ke4IqvtqJyV_z45nKqqOChxJhr6oaeQah9qwB5PjexURegLJHR_HKPDn-oVa4cyDX3mdoOzJjbb6jjgg8wr_EPFL8xftYYnD_pLF5LQmZNQsF8gP_PboJglEDolVi3PVgWl9JSNhP62SwlKpXmdWRQbJ0vPL49lFpdqgC0U1VViNmPx7jKCgL4If' },
+  sandwiches: { ar:'الساندوتشات',  en:'Sandwiches',  emoji:'🥪', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuAuxoBdzU97kF_yx9SlgJAj4sAOI6RvhFTVzs8QKFLgYinjGHE5kQApbcI2I5IfbYd9yy9nFablU1JKUnnbWty5Ke4IqvtqJyV_z45nKqqOChxJhr6oaeQah9qwB5PjexURegLJHR_HKPDn-oVa4cyDX3mdoOzJjbb6jjgg8wr_EPFL8xftYYnD_pLF5LQmZNQsF8gP_PboJglEDolVi3PVgWl9JSNhP62SwlKpXmdWRQbJ0vPL49lFpdqgC0U1VViNmPx7jKCgL4If' },
+  appetizers: { ar:'المقبلات',     en:'Appetizers',  emoji:'🥗', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuB9kGszg_KIa6G0RVhPjAxaua5JezlvcXnXL87ExnzQgOy5duxEZkEzvVGvamLnIEO0rtaKj_HsG1saFCQ8JNzV4NmH-GGCmVXhx50yJyuo4PPgeFRLBLDM8cTFJXGS3-Ftn0aBQr1_nEyzto-cggqNmRytR-ziQE17mET8xQkvyc3EBLy5C5a6LM4fUgNFAEMeJMn-YV_S2BlljE5i1vaFhoZ90aIOxG_pRaZxasPFsBgWaXiL0_BZ5Ho7MfqaXv-kKZTNlyi56Yci' },
+  drinks:     { ar:'مشروبات',      en:'Drinks',      emoji:'🥤', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuBLN9U1S397cdlmVGSNHEQCHaL9N_5paOTEzFoFGUyiZDJ82jgLIBb0WRK9FESRpiRJDctydLyseK_3tA5XzkCtAAUuU-G9dHVxqauknv-r51cKl2Q7Dio4d24ep51fZSbi0PWMrrloWDI0VgFzVEn1bSMkY0wA-K8C1Y0ms3oL6GFoq9j3ydDjvTKOdwtgnlrBbRC0pU7uuSCNAo8hHAJrmQ5UBXxUQ8D9ZHToYEzaXbJlvn-9fhdGnGfiZNEkt4hpib0S56_NgjTA' },
+  desserts:   { ar:'حلويات',       en:'Desserts',    emoji:'🍮', img:'https://lh3.googleusercontent.com/aida-public/AB6AXuBlX7fJZ1kCgpLg1pzQc0cGqBcR44UqHKQluoJ_Y2mE7MPu-z9JDIJkMzhInXx93F8PVtp0uuBHUSeIY5lnhvfl5HCAvApwp7eOMnvCB6JrJiBRCUeRBGOlrf3Ik3RkD4-bbN-AcBZ-7ik924h2WmTk96ZghPzwnV1n1x6WQQHOHVFW9uCRic0Jipr4Z6fFcVSxUjCD4noSGTE9sEn0AkxjzlyoQ96ow2fJLREnwFgvd-kbQl3CNB1TnRER7dioKFCjZs1UZrshoH5L' }
+};
+
+let activeCat = new URLSearchParams(window.location.search).get('cat') || 'all';
+const API_BASE = window.location.origin.indexOf('file:') === 0 ? 'http://localhost:5000' : '';
+
+async function loadItemsFromApi() {
+  try {
+    const [items, categories] = await Promise.all([
+      fetch(API_BASE + '/api/items').then(r => r.ok ? r.json() : []),
+      fetch(API_BASE + '/api/categories').then(r => r.ok ? r.json() : [])
+    ]);
+    if (items && items.length) localStorage.setItem('wh_items', JSON.stringify(items));
+    if (categories && categories.length) localStorage.setItem('wh_categories', JSON.stringify(categories));
+    renderItems();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function applyLanguage(lang) {
+  const html = document.documentElement;
+  const langText = document.getElementById('lang-text');
+  if (lang === 'ar') {
+    html.setAttribute('dir','rtl'); html.setAttribute('lang','ar');
+    if (langText) langText.innerText = 'AR';
+    currentLang = 'ar';
+  } else {
+    html.setAttribute('dir','ltr'); html.setAttribute('lang','en');
+    if (langText) langText.innerText = 'EN';
+    currentLang = 'en';
+  }
+  localStorage.setItem('lang', lang);
+  renderTabs();
+  renderItems();
+}
+
+function toggleLanguage() {
+  applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+}
+
+function renderTabs() {
+  const keys = ['all','grill','sandwiches','appetizers','drinks','desserts'];
+  document.getElementById('cat-tabs').innerHTML = keys.map(k => {
+    const isActive = activeCat === k;
+    const cat = CATS[k];
+    return `
+    <div class="cat-card flex-shrink-0 flex flex-col items-center gap-1.5 pb-2 ${isActive?'active':''}"
+         onclick="selectCat('${k}')" style="min-width:80px; max-width:100px">
+      <!-- Image circle -->
+      <div class="cat-img-wrap w-16 h-16 rounded-xl overflow-hidden border-2 ${isActive?'border-[#4CAF50]':'border-gray-200'} transition-all">
+        ${cat.img
+          ? `<img src="${cat.img}" class="w-full h-full object-cover" alt="${cat[currentLang]}"/>`
+          : `<div class="w-full h-full bg-green-50 flex items-center justify-center text-2xl">${cat.emoji}</div>`}
+      </div>
+      <!-- Emoji icon (like in reference image) -->
+      <div class="flex flex-col items-center gap-0.5">
+        <span class="text-base leading-none">${cat.emoji}</span>
+        <span class="cat-name text-xs font-bold text-center leading-tight ${isActive?'text-[#4CAF50]':'text-[#1b1c1a]'}">${cat[currentLang]}</span>
+      </div>
+      <!-- Active underline -->
+      <div class="cat-underline h-0.5 w-full rounded-full mt-0.5 transition-all ${isActive?'bg-[#4CAF50]':'bg-transparent'}"></div>
+    </div>`;
+  }).join('');
+}
+
+function selectCat(cat) {
+  activeCat = cat;
+  history.replaceState(null,'', cat==='all' ? 'category.html' : 'category.html?cat='+cat);
+  renderTabs();
+  renderItems();
+  // Scroll the selected tab into view
+  const tabs = document.getElementById('cat-tabs');
+  const idx = ['all','grill','sandwiches','appetizers','drinks','desserts'].indexOf(cat);
+  if (tabs.children[idx]) tabs.children[idx].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+}
+
+function getNormalizedCategory(cat) {
+  if (cat === 'chicken' || cat === 'meat') return 'grill';
+  if (cat === 'carbs') return 'appetizers';
+  return cat;
+}
+
+function renderItems() {
+  const allItems = JSON.parse(localStorage.getItem('wh_items') || '[]');
+  const filtered = activeCat === 'all'
+    ? allItems.filter(i => i.visible !== false)
+    : allItems.filter(i => getNormalizedCategory(i.category) === activeCat && i.visible !== false);
+
+  const title = document.getElementById('cat-title');
+  const count = document.getElementById('item-count');
+  const grid  = document.getElementById('items-grid');
+
+  title.textContent = CATS[activeCat]?.[currentLang] || '';
+  count.textContent = currentLang==='ar' ? filtered.length+' صنف' : filtered.length+' items';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full text-center py-20 text-gray-400">
+        <div class="text-6xl mb-4">🍽️</div>
+        <p class="font-bold text-lg">${currentLang==='ar'?'لا توجد أصناف بعد':'No items yet'}</p>
+        <p class="text-sm mt-1">${currentLang==='ar'?'أضف أصنافاً من لوحة التحكم':'Add items from the admin panel'}</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => {
+    const name  = currentLang==='ar' ? (item.nameAr||item.nameEn) : (item.nameEn||item.nameAr);
+    const desc  = currentLang==='ar' ? (item.descAr||item.descEn) : (item.descEn||item.descAr);
+    const cat   = CATS[item.category];
+    const catLabel = cat ? cat[currentLang] : item.category;
+    const basePrice = item.priceMd || item.price;
+    const currency  = currentLang==='ar' ? 'ر.س' : 'SAR';
+
+    return `
+    <div class="item-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-visible cursor-pointer"
+         onclick="openItem(${item.id})">
+      <!-- Top image area - NOT circular, full width, light bg -->
+      <div class="relative h-44 bg-gray-50 rounded-t-2xl overflow-hidden flex items-center justify-center">
+        ${item.img
+          ? `<img src="${item.img}" alt="${name}" class="w-full h-full object-cover"/>`
+          : `<div class="flex flex-col items-center gap-2 text-gray-300">
+               <div class="text-5xl">${cat?.emoji||'🍽️'}</div>
+             </div>`}
+        <!-- Category badge -->
+        <span class="absolute top-3 ${currentLang==='ar'?'right-3':'left-3'} bg-white/90 text-[#4CAF50] text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-green-100">
+          ${cat?.emoji||''} ${catLabel}
+        </span>
+      </div>
+
+      <!-- Circular image popping out -->
+      <div class="flex justify-center" style="margin-top:-32px; position:relative; z-index:10;">
+        <div class="w-16 h-16 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
+          ${item.img
+            ? `<img src="${item.img}" alt="${name}" class="w-full h-full object-cover"/>`
+            : `<div class="w-full h-full bg-green-50 flex items-center justify-center text-2xl">${cat?.emoji||'🍽️'}</div>`}
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="px-4 pb-4 pt-2 text-center">
+        <h3 class="font-black text-[#1b1c1a] text-[15px] mb-1">${name}</h3>
+        ${desc ? `<p class="text-xs text-gray-500 leading-relaxed mb-3 line-clamp-2">${desc}</p>` : '<div class="mb-3"></div>'}
+
+        <!-- Tags row (sizes/portions as tags) -->
+        <div class="flex flex-wrap justify-center gap-1.5 mb-3">
+          ${item.portions && item.portions.length > 0
+            ? item.portions.slice(0,3).map((p,i) =>
+                `<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ${i===0?'bg-[#4CAF50] text-white':'bg-green-50 text-[#4CAF50] border border-green-200'}">${p.label}${p.price?' · '+p.price+' ر.س':''}</span>`
+              ).join('')
+            : `${item.priceSm ? `<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-green-50 text-[#4CAF50] border border-green-200">${currentLang==='ar'?'صغير':'Small'}</span>` : ''}
+               ${item.priceMd||item.price ? `<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#4CAF50] text-white">${currentLang==='ar'?'وسط':'Medium'}</span>` : ''}
+               ${item.priceLg ? `<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-green-50 text-[#4CAF50] border border-green-200">${currentLang==='ar'?'كبير':'Large'}</span>` : ''}`
+          }
+        </div>
+
+        <!-- Price & Calories -->
+        <div class="flex items-center justify-center gap-4 mb-4">
+          ${item.cal ? `
+          <span class="flex items-center gap-1 text-xs text-orange-400 font-bold">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.66 11.2C17.43 10.9 17.15 10.64 16.89 10.38C16.22 9.78 15.46 9.35 14.82 8.72C13.33 7.26 13 4.85 13.95 3C13 3.23 12.17 3.75 11.46 4.32C8.87 6.4 7.85 10.07 9.07 13.22C9.11 13.32 9.15 13.42 9.15 13.55C9.15 13.77 9 13.97 8.8 14.05C8.57 14.15 8.33 14.09 8.14 13.93C8.08 13.88 8.04 13.83 8 13.76C6.87 12.33 6.69 10.28 7.45 8.64C5.78 10 4.87 12.3 5 14.47C5.06 14.97 5.12 15.47 5.29 15.97C5.43 16.57 5.7 17.17 6 17.7C7.08 19.43 8.95 20.67 10.96 20.92C13.1 21.19 15.39 20.8 17.03 19.32C18.86 17.66 19.5 15 18.56 12.72L18.43 12.46C18.22 12 17.66 11.2 17.66 11.2Z"/></svg>
+            ${item.cal} ${currentLang==='ar'?'سعرة':'kcal'}
+          </span>` : ''}
+          ${basePrice ? `
+          <span class="text-[#4CAF50] font-black text-base">
+            ${currentLang==='ar' ? `${basePrice} ${currency}` : `${currency} ${basePrice}`}
+          </span>` : ''}
+        </div>
+
+        <button onclick="event.stopPropagation(); openItem(${item.id})"
+          class="w-full py-2.5 bg-[#4CAF50] text-white text-sm font-bold rounded-xl hover:bg-green-600 active:scale-95 transition-all shadow-sm shadow-green-100">
+          ${currentLang==='ar' ? 'عرض التفاصيل ←' : 'View Details →'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openItem(id) {
+  localStorage.setItem('wh_current_item', String(id));
+  window.location.href = 'item.html';
+}
+
+applyLanguage(currentLang);
+loadItemsFromApi();
+</script>
+</body>
+</html>

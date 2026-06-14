@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WELL HEALTH | Admin Login</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  body { font-family: 'Cairo', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .input-field { border: 0; border-bottom: 2px solid #bfc9c1; background: transparent; width: 100%; padding: 10px 0; font-size: 16px; transition: border-color 0.2s; }
+  .input-field:focus { outline: none; border-bottom-color: #4CAF50; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .fade-in { animation: fadeIn 0.5s ease forwards; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+  .shake { animation: shake 0.4s ease; }
+</style>
+</head>
+<body class="min-h-screen bg-[#FAF6EE] flex items-center justify-center px-4">
+
+<!-- Background pattern -->
+<div class="fixed inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #4CAF50 1px, transparent 0); background-size: 32px 32px;"></div>
+
+<div class="fade-in w-full max-w-sm">
+  <!-- Logo -->
+  <div class="text-center mb-10">
+    <div class="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden shadow-lg ring-4 ring-[#4CAF50]/10">
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvU1iFqSpneQt1LkPWHUBXqS05JDvfgsNLOFyhvlqHiGiDLHbvBTV6YG3AJhaPYtECeYm5ompyLXxAG07CxGSyvXXjgCASjkrvjvokLKkobaRyeRDmmaKA4uZXz2C2E7NCA7diEfnR8KXawZnwAM5JWlft73qJ0yZrKTUFVCwx3dqsd8cq8PD3xjMiWHY5ZZ8QNXuu5aOcWe-Dq_zRgS3Gg4lfKop_r8Rxsq9cS8WpjGhp5B6y-ukS2sad1xYSETurQU55f3qCDO33" class="w-full h-full object-cover"/>
+    </div>
+    <h1 class="text-2xl font-bold text-[#4CAF50]" style="font-family:'Playfair Display'">WELL HEALTH</h1>
+    <p class="text-sm text-[#707973] mt-1">Admin Portal</p>
+  </div>
+
+  <!-- Card -->
+  <div class="bg-[#FDFBF7] rounded-2xl shadow-sm border border-[#bfc9c1]/40 p-8">
+    <h2 class="text-lg font-bold text-[#1b1c1a] mb-6">Sign In</h2>
+
+    <form id="login-form" onsubmit="handleLogin(event)" class="space-y-6">
+      <!-- Username -->
+      <div class="relative">
+        <label class="text-[11px] font-bold tracking-widest text-[#707973] uppercase block mb-1">Username</label>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[#4CAF50] text-[20px]">person</span>
+          <input id="username" type="text" placeholder="Enter username" class="input-field" autocomplete="username"/>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="relative">
+        <label class="text-[11px] font-bold tracking-widest text-[#707973] uppercase block mb-1">Password</label>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[#4CAF50] text-[20px]">lock</span>
+          <input id="password" type="password" placeholder="Enter password" class="input-field flex-1" autocomplete="current-password"/>
+          <button type="button" onclick="togglePass()" class="text-[#707973] hover:text-[#4CAF50] transition-colors">
+            <span id="eye-icon" class="material-symbols-outlined text-[20px]">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Error msg -->
+      <p id="error-msg" class="text-[#ba1a1a] text-sm items-center gap-2" style="display:none">
+        <span class="material-symbols-outlined text-[16px]">error</span>
+        <span>اسم المستخدم أو كلمة المرور غلط</span>
+      </p>
+
+      <!-- Submit -->
+      <button type="submit" class="w-full py-3 bg-[#4CAF50] text-white rounded-xl font-bold text-sm tracking-widest hover:opacity-90 active:scale-95 transition-all shadow-md shadow-[#4CAF50]/20 flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">login</span>
+        SIGN IN
+      </button>
+    </form>
+
+    <!-- Hint -->
+    <div class="mt-6 p-3 bg-[#FAF6EE] rounded-lg text-center">
+      <p class="text-[11px] text-[#707973]">Default: <span class="font-bold text-[#4CAF50]">admin</span> / <span class="font-bold text-[#4CAF50]">wellhealth123</span></p>
+    </div>
+  </div>
+
+  <p class="text-center text-[11px] text-[#707973] mt-6">© 2024 WELL HEALTH. All rights reserved.</p>
+</div>
+
+<script>
+  // Credentials — change these
+  const CREDENTIALS = { username: 'admin', password: 'wellhealth123' };
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const errMsg = document.getElementById('error-msg');
+    const form = document.getElementById('login-form');
+
+    if (user === CREDENTIALS.username && pass === CREDENTIALS.password) {
+      sessionStorage.setItem('wh_auth', 'true');
+      localStorage.setItem('wh_auth', 'true'); // backup for file:// protocol
+      window.location.href = 'admin.html';
+    } else {
+      errMsg.style.display = 'flex';
+      form.classList.add('shake');
+      setTimeout(() => form.classList.remove('shake'), 400);
+    }
+  }
+
+  function togglePass() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('eye-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.innerText = 'visibility_off';
+    } else {
+      input.type = 'password';
+      icon.innerText = 'visibility';
+    }
+  }
+
+  // If already logged in, go straight to admin
+  if (sessionStorage.getItem('wh_auth') === 'true' || localStorage.getItem('wh_auth') === 'true') {
+    window.location.href = 'admin.html';
+  }
+</script>
+</body>
+</html>
