@@ -1,0 +1,29 @@
+Options -MultiViews
+RewriteEngine On
+RewriteBase /api/
+
+# Items API
+RewriteRule ^items/sync/?$ items.php?action=sync [QSA,L]
+RewriteRule ^items/([a-zA-Z0-9_-]+)/?$ items.php?id=$1 [QSA,L]
+RewriteRule ^items/?$ items.php [QSA,L]
+
+# Categories API
+RewriteRule ^categories/sync/?$ categories.php?action=sync [QSA,L]
+RewriteRule ^categories/([a-zA-Z0-9_-]+)/?$ categories.php?id=$1 [QSA,L]
+RewriteRule ^categories/?$ categories.php [QSA,L]
+
+# Guidelines API
+RewriteRule ^guidelines/sync/?$ guidelines.php?action=sync [QSA,L]
+RewriteRule ^guidelines/([a-zA-Z0-9_-]+)/?$ guidelines.php?id=$1 [QSA,L]
+RewriteRule ^guidelines/?$ guidelines.php [QSA,L]
+
+# Social Links API
+RewriteRule ^social-links/sync/?$ social-links.php?action=sync [QSA,L]
+RewriteRule ^social-links/([a-zA-Z0-9_-]+)/?$ social-links.php?id=$1 [QSA,L]
+RewriteRule ^social-links/?$ social-links.php [QSA,L]
+
+# Settings API
+RewriteRule ^settings/?$ settings.php [QSA,L]
+
+# Admin credentials API
+RewriteRule ^admin/credentials/?$ admin_credentials.php [QSA,L]
