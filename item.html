@@ -85,6 +85,7 @@
       font-family: 'Cairo', sans-serif;
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body class="bg-black/40 font-body-md text-on-surface">
@@ -189,7 +190,7 @@
     document.addEventListener('DOMContentLoaded', async function () {
       const lang = localStorage.getItem('lang') || 'en';
       const itemId = localStorage.getItem('wh_current_item');
-      const API_BASE = window.location.origin.indexOf('file:') === 0 ? 'http://localhost:5000' : '';
+      const API_BASE = getApiBase();
       try {
         const remoteItems = await fetch(API_BASE + '/api/items').then(r => r.ok ? r.json() : []);
         if (remoteItems && remoteItems.length) localStorage.setItem('wh_items', JSON.stringify(remoteItems));

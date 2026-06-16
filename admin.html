@@ -732,6 +732,7 @@
       }
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body>
@@ -1034,6 +1035,23 @@
         <button class="btn btn-green" onclick="saveRestaurantInfo()">
           <span class="material-symbols-outlined">save</span>
           <span data-ar="حفظ" data-en="Save">حفظ</span>
+        </button>
+      </div>
+
+      <!-- Admin Credentials -->
+      <div class="settings-card" style="margin-top:16px;">
+        <h4 data-ar="بيانات دخول المشرف" data-en="Admin Credentials">بيانات دخول المشرف</h4>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label data-ar="اسم المستخدم الجديد" data-en="New Admin Username">اسم المستخدم الجديد</label>
+          <input type="text" id="settings-admin-username" placeholder="admin" />
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label data-ar="كلمة المرور الجديدة" data-en="New Admin Password">كلمة المرور الجديدة</label>
+          <input type="password" id="settings-admin-password" placeholder="wellhealth123" />
+        </div>
+        <button class="btn btn-green" onclick="saveAdminCredentials()">
+          <span class="material-symbols-outlined">save</span>
+          <span data-ar="حفظ الحساب" data-en="Save Credentials">حفظ الحساب</span>
         </button>
       </div>
     </div>
@@ -1432,7 +1450,7 @@
     // =============================================
     // CORE DATA FUNCTIONS
     // =============================================
-    var API_BASE = window.location.origin.indexOf('file:') === 0 ? 'http://localhost:5000' : '';
+    var API_BASE = getApiBase();
 
     async function apiGet(path) {
       var res = await fetch(API_BASE + path);
@@ -1498,6 +1516,8 @@
       if (settings.coverImage) localStorage.setItem('wh_cover_image', settings.coverImage);
       if (settings.aboutTextEn !== undefined) localStorage.setItem('wh_about_text_en', settings.aboutTextEn || '');
       if (settings.aboutTextAr !== undefined) localStorage.setItem('wh_about_text_ar', settings.aboutTextAr || '');
+      if (settings.adminUsername) localStorage.setItem('wh_admin_username', settings.adminUsername);
+      if (settings.adminPassword) localStorage.setItem('wh_admin_password', settings.adminPassword);
     }
 
     function collectSettingsPayload() {
@@ -1515,7 +1535,9 @@
         logo: localStorage.getItem('wh_logo') || '',
         coverImage: localStorage.getItem('wh_cover_image') || '',
         aboutTextEn: localStorage.getItem('wh_about_text_en') || '',
-        aboutTextAr: localStorage.getItem('wh_about_text_ar') || ''
+        aboutTextAr: localStorage.getItem('wh_about_text_ar') || '',
+        adminUsername: localStorage.getItem('wh_admin_username') || 'admin',
+        adminPassword: localStorage.getItem('wh_admin_password') || 'wellhealth123'
       });
     }
 
@@ -2569,6 +2591,15 @@
       saveRestaurantInfo();
     }
 
+    function saveAdminCredentials() {
+      var adminUser = document.getElementById('settings-admin-username').value.trim() || 'admin';
+      var adminPass = document.getElementById('settings-admin-password').value || 'wellhealth123';
+      localStorage.setItem('wh_admin_username', adminUser);
+      localStorage.setItem('wh_admin_password', adminPass);
+      syncSettings();
+      showToast(isAR() ? 'تم حفظ بيانات دخول المشرف ✓' : 'Admin credentials saved ✓');
+    }
+
     function loadSettings() {
       loadBrandingSettings();
       try {
@@ -2576,6 +2607,16 @@
         if (s.name && document.getElementById('settings-name')) document.getElementById('settings-name').value = s.name;
         if (s.email && document.getElementById('settings-email')) document.getElementById('settings-email').value = s.email;
       } catch (e) { }
+
+      // Load admin credentials
+      var adminUser = localStorage.getItem('wh_admin_username') || 'admin';
+      var adminPass = localStorage.getItem('wh_admin_password') || 'wellhealth123';
+      if (document.getElementById('settings-admin-username')) {
+        document.getElementById('settings-admin-username').value = adminUser;
+      }
+      if (document.getElementById('settings-admin-password')) {
+        document.getElementById('settings-admin-password').value = adminPass;
+      }
     }
 
     // =============================================

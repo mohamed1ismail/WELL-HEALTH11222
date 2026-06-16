@@ -74,16 +74,44 @@
 
     <!-- Hint -->
     <div class="mt-6 p-3 bg-[#FAF6EE] rounded-lg text-center">
-      <p class="text-[11px] text-[#707973]">Default: <span class="font-bold text-[#4CAF50]">admin</span> / <span class="font-bold text-[#4CAF50]">wellhealth123</span></p>
+      <p class="text-[11px] text-[#707973]">Username: <span id="hint-username" class="font-bold text-[#4CAF50]">admin</span> &nbsp;/&nbsp; Password: <span id="hint-password" class="font-bold text-[#4CAF50]">wellhealth123</span></p>
     </div>
   </div>
 
   <p class="text-center text-[11px] text-[#707973] mt-6">© 2024 WELL HEALTH. All rights reserved.</p>
 </div>
 
+<script src="config.js"></script>
 <script>
-  // Credentials — change these
+  // Credentials — change these dynamically
   const CREDENTIALS = { username: 'admin', password: 'wellhealth123' };
+
+  var API_BASE = getApiBase();
+
+  async function loadCredentials() {
+    try {
+      const res = await fetch(API_BASE + '/api/admin/credentials');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.username) CREDENTIALS.username = data.username;
+        if (data.password) CREDENTIALS.password = data.password;
+        // Sync to local storage for offline/cached fallback
+        localStorage.setItem('wh_admin_username', CREDENTIALS.username);
+        localStorage.setItem('wh_admin_password', CREDENTIALS.password);
+      }
+    } catch (e) {
+      console.log('Using cached/local credentials');
+      CREDENTIALS.username = localStorage.getItem('wh_admin_username') || 'admin';
+      CREDENTIALS.password = localStorage.getItem('wh_admin_password') || 'wellhealth123';
+    }
+    // Update hint display
+    var hintUser = document.getElementById('hint-username');
+    var hintPass = document.getElementById('hint-password');
+    if (hintUser) hintUser.textContent = CREDENTIALS.username;
+    if (hintPass) hintPass.textContent = CREDENTIALS.password;
+  }
+
+  loadCredentials();
 
   function handleLogin(e) {
     e.preventDefault();

@@ -269,6 +269,7 @@
       transform: none
     }
   </style>
+  <script src="config.js"></script>
 </head>
 
 <body class="bg-surface text-on-background min-h-screen" dir="ltr">
@@ -376,6 +377,26 @@
         class="w-11 h-11 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-primary hover:text-white transition-all duration-300">
         <span class="material-symbols-outlined text-[20px]">call</span>
       </a>
+    </div>
+
+    <!-- Small App Download Links Section -->
+    <div id="app-download-small" class="mt-4 flex flex-col items-center gap-1.5" style="display: none;">
+      <p class="text-xs text-on-surface-variant font-bold">
+        <span class="lang-en">Download WELL HEALTH App</span>
+        <span class="lang-ar">تحميل تطبيق ويل هيلث</span>
+      </p>
+      <div class="flex gap-2">
+        <a id="android-app-link-small" href="#" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-full bg-primary text-white hover:opacity-90 active:scale-95 transition-all shadow-sm" aria-label="Android App">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.5 12c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5m-11 0c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5M18.8 6.9l1.8-3.1c.1-.2 0-.5-.2-.6-.2-.1-.5 0-.6.2l-1.8 3.1C16.5 5.6 14.3 5 12 5s-4.5.6-6 1.5L4.2 3.4c-.1-.2-.4-.3-.6-.2-.2.1-.3.4-.2.6l1.8 3.1C2.9 8.7 1 11.6 1 15h22c0-3.4-1.9-6.3-4.2-8.1" />
+          </svg>
+        </a>
+        <a id="ios-app-link-small" href="#" target="_blank" class="w-9 h-9 flex items-center justify-center rounded-full bg-primary text-white hover:opacity-90 active:scale-95 transition-all shadow-sm" aria-label="iOS App">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.82M15.97 4.17c.66-.81 1.11-1.93.99-3.06-.96.04-2.13.64-2.82 1.45-.6.69-1.12 1.83-1 2.94.97.08 2.07-.52 2.83-1.33z" />
+          </svg>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -921,7 +942,7 @@
       }
     }
 
-    var API_BASE = window.location.origin.indexOf('file:') === 0 ? 'http://localhost:5000' : '';
+    var API_BASE = getApiBase();
 
     async function loadPublicData() {
       try {
@@ -1274,6 +1295,23 @@
       var appPromoDismissed = localStorage.getItem('wh_app_promo_dismissed') === 'true';
       var androidAppUrl = localStorage.getItem('wh_android_app_url') || '';
       var iosAppUrl = localStorage.getItem('wh_ios_app_url') || '';
+
+      // Update small app download links under social row
+      var appDlSmall = document.getElementById('app-download-small');
+      if (appDlSmall) {
+        appDlSmall.style.display = appDownloadEnabled && (androidAppUrl || iosAppUrl) ? 'flex' : 'none';
+      }
+      var androidLinkSmall = document.getElementById('android-app-link-small');
+      if (androidLinkSmall) {
+        androidLinkSmall.href = androidAppUrl || '#';
+        androidLinkSmall.style.display = androidAppUrl ? 'inline-flex' : 'none';
+      }
+      var iosLinkSmall = document.getElementById('ios-app-link-small');
+      if (iosLinkSmall) {
+        iosLinkSmall.href = iosAppUrl || '#';
+        iosLinkSmall.style.display = iosAppUrl ? 'inline-flex' : 'none';
+      }
+
       // Show app download section whenever enabled and not dismissed (regardless of URL)
       var appDlEl = document.getElementById('app-download');
       if (appDlEl) {
